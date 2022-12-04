@@ -47,8 +47,10 @@
     "module-alias": "^2.2.2"
   },
   "_moduleAliases": {
-    "@/resources": "dist/resources",
-    "@/utils": "dist/utils",
-    "@/middleware": "dist/middleware"
+    "@/Controllers" : "dist/Controllers",
+    "@/Models" : "dist/Models",
+    "@/Middleware" : "dist/Middleware",
+    "@/Routes" : "dist/Routes",
+    "@/Services" : "dist/Services"
   }
 }
