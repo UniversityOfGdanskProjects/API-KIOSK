@@ -5,9 +5,9 @@ import {
     NextFunction,
     RequestHandler,
 } from 'express';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import cheerio from 'cheerio';
-import { News } from '@/Types/types';
+import { News } from '@/Types/News';
 
 export const getNewsMFI: RequestHandler = async (
     req: Request,
@@ -23,7 +23,7 @@ export const getNewsMFI: RequestHandler = async (
         const newsArray: News[] = [];
         const $ = cheerio.load(HTMLData);
         const selectedElem = '.item-list > ul > li';
-        $(selectedElem).each((parentIndex, parentElem) => {
+        $(selectedElem).map((parentIndex, parentElem) => {
             const img = $(parentElem)
                 .find('.image-style-news-main-page')
                 .attr('src');
@@ -41,8 +41,13 @@ export const getNewsMFI: RequestHandler = async (
             newsArray.push(newsDetail);
         });
         res.send(newsArray);
-    } catch (error) {
-        res.send(error);
+    } catch (err) {
+        const error = err as Error | AxiosError;
+        res.status(500).json({
+            success: false,
+            message: 'Błąd serwera!',
+            error: error.message,
+        });
     }
 };
 
@@ -64,7 +69,7 @@ export const getNewsINF: RequestHandler = async (
         const newsArray: News[] = [];
         const $ = cheerio.load(HTMLData);
         const selectedElem = 'div.newsBox';
-        $(selectedElem).each((parentIndex, parentElem) => {
+        $(selectedElem).map((parentIndex, parentElem) => {
             const img = $(parentElem)
                 .find('.newsThumb')
                 .find('img')
@@ -83,7 +88,12 @@ export const getNewsINF: RequestHandler = async (
             newsArray.push(newsDetail);
         });
         res.send(newsArray);
-    } catch (error) {
-        res.send(error);
+    } catch (err) {
+        const error = err as Error | AxiosError;
+        res.status(500).json({
+            success: false,
+            message: 'Błąd serwera!',
+            error: error.message,
+        });
     }
 };
