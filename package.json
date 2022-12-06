@@ -53,6 +53,7 @@
     "@/Models": "dist/Models",
     "@/Middleware": "dist/Middleware",
     "@/Routes": "dist/Routes",
-    "@/Services": "dist/Services"
+    "@/Services": "dist/Services",
+    "@/Types": "dist/Types"
   }
 }
