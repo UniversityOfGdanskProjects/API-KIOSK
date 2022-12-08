@@ -8,7 +8,7 @@
     "start:prod": "cross-env NODE_ENV=production node dist/index.js",
     "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
     "build": "tsc",
-    "postinstall": "npm run build",
+    "postinstall": "yarn run build",
     "test": "jest",
     "test:unit": "jest unit",
     "test:int": "jest int",
