@@ -1,60 +1,47 @@
 {
-  "name": "api-kiosk",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "cross-env NODE_ENV=development node dist/index.js",
-    "dev": "nodemon",
-    "build": "tsc",
-    "test": "jest",
-    "test:unit": "jest unit",
-    "test:int": "jest int",
-    "test:coverage": "jest --coverage"
-  },
-  "nodemonConfig": {
-    "watch": [
-      "src"
-    ],
-    "ext": "ts",
-    "exec": "ts-node src/index.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/UniversityOfGdanskProjects/API-KIOSK.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/UniversityOfGdanskProjects/API-KIOSK/issues"
-  },
-  "homepage": "https://github.com/UniversityOfGdanskProjects/API-KIOSK#readme",
-  "devDependencies": {
-    "@types/express": "^4.17.14",
-    "@types/jest": "^29.2.3",
-    "@types/node": "^18.11.9",
-    "@typescript-eslint/eslint-plugin": "^5.43.0",
-    "@typescript-eslint/parser": "^5.43.0",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.28.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "jest": "^29.3.1",
-    "nodemon": "^2.0.20",
-    "prettier": "^2.7.1",
-    "ts-jest": "^29.0.3",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.9.3"
-  },
-  "dependencies": {
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "module-alias": "^2.2.2"
-  },
-  "_moduleAliases": {
-    "@/resources": "dist/resources",
-    "@/utils": "dist/utils",
-    "@/middleware": "dist/middleware"
-  }
+    "name": "api-kiosk",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "NODE_ENV=production node dist/index.js",
+        "dev": "nodemon",
+        "docker:dev": "dotenv -- cross-var docker run -dp %PORT%:%PORT% --name=%DOCKER_NAME% -w /%DIR_NAME% -v $(pwd):/%DIR_NAME% node:18-alpine sh -c 'yarn install && yarn dev'",
+        "docker:stop": "dotenv -- cross-var docker rm -f %DOCKER_NAME%",
+        "docker:build": "dotenv -- cross-var docker build -t %DOCKER_TAG% --build-arg PORT=%PORT% --build-arg MONGO_PATH=%MONGO_PATH% --build-arg MONGO_USER=%MONGO_USER% --build-arg MONGO_PASSWORD=%MONGO_PASSWORD% .",
+        "build": "tsc",
+        "test": "jest",
+        "test:unit": "jest unit",
+        "test:int": "jest int",
+        "test:coverage": "jest --coverage"
+    },
+    "nodemonConfig": {
+        "watch": [
+            "src"
+        ],
+        "ext": "ts",
+        "exec": "ts-node src/index.ts"
+    },
+    "license": "ISC",
+    "devDependencies": {
+        "@types/express": "^4.17.14",
+        "@types/jest": "^29.2.3",
+        "@types/node": "^18.11.9",
+        "@typescript-eslint/eslint-plugin": "^5.43.0",
+        "@typescript-eslint/parser": "^5.43.0",
+        "cross-env": "^7.0.3",
+        "cross-var": "^1.1.0",
+        "dotenv-cli": "^6.0.0",
+        "eslint": "^8.28.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "jest": "^29.3.1",
+        "nodemon": "^2.0.20",
+        "prettier": "^2.7.1",
+        "ts-jest": "^29.0.3",
+        "ts-node": "^10.9.1",
+        "typescript": "^4.9.3"
+    },
+    "dependencies": {
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2"
+    }
 }
