@@ -1,14 +1,12 @@
 {
     "name": "api-kiosk",
     "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
     "scripts": {
-        "start": "cross-env NODE_ENV=development node dist/index.js",
+        "start": "NODE_ENV=production node dist/index.js",
+        "dev": "nodemon",
         "docker:dev": "dotenv -- cross-var docker run -dp %PORT%:%PORT% --name=%DOCKER_NAME% -w /%DIR_NAME% -v $(pwd):/%DIR_NAME% node:18-alpine sh -c 'yarn install && yarn dev'",
         "docker:stop": "dotenv -- cross-var docker rm -f %DOCKER_NAME%",
-        "docker:build": "dotenv -- cross-var docker build -t %DOCKER_TAG% .",
-        "dev": "nodemon",
+        "docker:build": "dotenv -- cross-var docker build -t %DOCKER_TAG% --build-arg PORT=%PORT% --build-arg MONGO_PATH=%MONGO_PATH% --build-arg MONGO_USER=%MONGO_USER% --build-arg MONGO_PASSWORD=%MONGO_PASSWORD% .",
         "build": "tsc",
         "test": "jest",
         "test:unit": "jest unit",
@@ -26,13 +24,7 @@
         "type": "git",
         "url": "git+https://github.com/UniversityOfGdanskProjects/API-KIOSK.git"
     },
-    "keywords": [],
-    "author": "",
     "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/UniversityOfGdanskProjects/API-KIOSK/issues"
-    },
-    "homepage": "https://github.com/UniversityOfGdanskProjects/API-KIOSK#readme",
     "devDependencies": {
         "@types/express": "^4.17.14",
         "@types/jest": "^29.2.3",
@@ -54,7 +46,6 @@
     },
     "dependencies": {
         "dotenv": "^16.0.3",
-        "express": "^4.18.2",
-        "module-alias": "^2.2.2"
+        "express": "^4.18.2"
     }
 }
