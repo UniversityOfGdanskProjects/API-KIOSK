@@ -20,6 +20,6 @@ ARG MONGO_PASSWORD
 ENV MONGO_PASSWORD $MONGO_PASSWORD
 
 COPY --from=build package.json yarn.lock ./
-COPY --from=build dist ./dist/
+COPY --from=build dist/src ./dist/
 RUN yarn install --production
 CMD ["yarn", "start"]

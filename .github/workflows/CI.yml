@@ -10,7 +10,7 @@ jobs:
 
         strategy:
             matrix:
-                node-version: [16.x]
+                node-version: [18.x]
                 os: [ubuntu-latest]
 
         steps:
@@ -24,8 +24,14 @@ jobs:
             - name: install dependencies
               run: yarn install --frozen-lockfile
 
-            - name: unit test
+            - name: test prettier
+              run: yarn prettier:ci
+
+            - name: unit tests
               run: yarn test:unit
 
             - name: coverage tests
               run: yarn test:coverage
+
+            - name: build
+              run: yarn build
