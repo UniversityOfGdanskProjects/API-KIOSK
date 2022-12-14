@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { News } from '@/Types/News';
+import { News } from '../Types/News';
 
 const NewsSchema = new mongoose.Schema<News>({
     photo: {

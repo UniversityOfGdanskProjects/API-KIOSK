@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { NewsModel } from '../Models/news.model';
 export const NewsScheduler = async () => {
-    await updateNewsSchema('/news/inf', 'INF');
-    await updateNewsSchema('/news/mfi', 'MFI');
+    await updateNewsSchema('/scraper/news/inf', 'INF');
+    await updateNewsSchema('/scraper/news/mfi', 'MFI');
 };
 
 const updateNewsSchema = async (url: string, siteType: string) => {

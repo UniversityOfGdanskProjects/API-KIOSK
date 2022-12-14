@@ -7,7 +7,7 @@ import {
 } from 'express';
 import axios, { AxiosError } from 'axios';
 import cheerio from 'cheerio';
-import { News } from '@/Types/News';
+import { News } from '../../Types/News';
 
 const getBody = async (link: string, element: string): Promise<string> => {
     const HTMLDataRequest = await axios.get(link);
