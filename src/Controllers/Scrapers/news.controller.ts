@@ -7,7 +7,7 @@ import {
 } from 'express';
 import axios, { AxiosError } from 'axios';
 import cheerio from 'cheerio';
-import { News } from '@/Types/News';
+import { News } from '../../Types/News';
 
 const getBody = async (link: string, element: string): Promise<string> => {
     const HTMLDataRequest = await axios.get(link);
@@ -56,6 +56,7 @@ export const getNewsMFI: RequestHandler = async (
                         title: title,
                         shortBody: body,
                         body: longBody,
+                        site: 'MFI',
                     };
 
                     return newsDetail;
@@ -80,14 +81,11 @@ export const getNewsINF: RequestHandler = async (
     next: NextFunction
 ) => {
     try {
-        const HTMLDataRequest = await axios.get(
-            'https://inf.ug.edu.pl/studinfo',
-            {
-                headers: {
-                    'Accept-Encoding': 'application/json',
-                },
-            }
-        );
+        const HTMLDataRequest = await axios.get('https://inf.ug.edu.pl/news', {
+            headers: {
+                'Accept-Encoding': 'application/json',
+            },
+        });
         const HTMLData = HTMLDataRequest.data;
         const $ = cheerio.load(HTMLData);
         const selectedElem = 'div.newsBox';
@@ -113,6 +111,7 @@ export const getNewsINF: RequestHandler = async (
                         title: title,
                         shortBody: body,
                         body: longBody,
+                        site: 'INF',
                     };
                     return newsDetail;
                 })

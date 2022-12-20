@@ -5,4 +5,5 @@ export interface News {
     title: string;
     shortBody: string;
     body: string;
+    site: string;
 }
