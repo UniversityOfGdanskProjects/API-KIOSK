@@ -5,24 +5,49 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 
 describe('Test of login service', () => {
-    beforeAll(async () => await connectToDB());
+    let hashedPassword: string;
 
-    afterAll(async () => await mongoose.disconnect());
+    beforeAll(async () => {
+        await connectToDB();
 
-    it.only('Find existing user', async () => {
-        const createdUser = await UsersModel.create({
+        hashedPassword = await bcrypt.hash('password', 10);
+
+        await UsersModel.create({
             login: 'login',
-            password: await bcrypt.hash('password', 10),
+            password: hashedPassword,
         });
+    });
 
+    afterAll(async () => {
+        await UsersModel.deleteOne({ login: 'login' });
+        await mongoose.disconnect();
+    });
+
+    it.only('Correct login data', async () => {
         const foundUser = await checkLoginData({
             login: 'login',
             password: 'password',
         });
 
-        expect(foundUser?.login).toBe(createdUser.login);
-        expect(foundUser?.password).toBe(createdUser.password);
+        expect(foundUser?.login).toBe('login');
+        expect(foundUser?.password).toBe(hashedPassword);
+    });
 
-        await UsersModel.findByIdAndDelete(createdUser._id);
+    it.only('Non-existing user', async () => {
+        const foundUser = await checkLoginData({
+            login: 'anotherLogin',
+            password: 'anotherPassword',
+        });
+
+        expect(foundUser).toBe(null);
+    });
+
+    it.only('Wrong password', async () => {
+        const foundUser = await checkLoginData({
+            login: 'login',
+            password: 'anotherPassword',
+        });
+
+        expect(foundUser).toBe(null);
     });
 });
