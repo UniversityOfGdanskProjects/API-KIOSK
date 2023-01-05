@@ -11,5 +11,4 @@ module.exports = {
             statements: 0,
         },
     },
-    moduleDirectories: ['node_modules', 'src'],
 };

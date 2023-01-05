@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { Users } from '../Types/Users';
+import { User } from '../Types/User';
 
-const UsersSchema = new mongoose.Schema<Users>({
+const UsersSchema = new mongoose.Schema<User>({
     login: {
         type: String,
         required: true,
@@ -14,4 +14,4 @@ const UsersSchema = new mongoose.Schema<Users>({
     },
 });
 
-export const UsersModel = mongoose.model<Users>('Users', UsersSchema, 'users');
+export const UsersModel = mongoose.model<User>('Users', UsersSchema, 'users');
