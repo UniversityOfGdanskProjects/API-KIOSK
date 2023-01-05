@@ -1,19 +1,13 @@
+import { connectToDB } from './Configs/db.config';
 import express, { Express, Request, Response } from 'express';
-import mongoose from 'mongoose';
-
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
 
-const connectionString = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_PATH}`;
-
-mongoose.set('strictQuery', false);
-mongoose
-    .connect(connectionString)
-    .then(() => console.log('Connected with MongoDB'));
+connectToDB();
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World');
@@ -22,5 +16,3 @@ app.get('/', (req: Request, res: Response) => {
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
-
-// admin panel login feature

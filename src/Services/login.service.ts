@@ -7,8 +7,8 @@ export const checkLoginData = async (loginData: User): Promise<User | null> => {
     if (user === null) return null;
 
     const ifPasswordCorrect = await bcrypt.compare(
-        user.password,
-        loginData.password
+        loginData.password,
+        user.password
     );
 
     return ifPasswordCorrect ? user : null;
