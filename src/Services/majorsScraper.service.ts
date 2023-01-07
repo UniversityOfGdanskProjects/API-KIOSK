@@ -1,57 +1,89 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-import { Major, MajorContent } from 'Types/major.type';
+import { Major, MajorContent } from '../Types/major.type';
 
-const majorScraper = async (partialMajor: Partial<Major>): Promise<Major> => {
-    const { name, url } = partialMajor;
-    const { data } = await axios.get(url || '');
+interface ErrorType {
+    status: number;
+    message: string;
+}
 
-    const $ = cheerio.load(data);
+const majorScraper = async (
+    partialMajor: Partial<Major>
+): Promise<Major | null> => {
+    try {
+        const { name, url } = partialMajor;
 
-    const majorInfo = $(
-        '#taxonomy-term-43528 > div > div > div > div > div > div > span > article > div.node__content.clearfix > div'
-    )
-        .children()
-        .map(
-            (index, element) =>
-                ({
-                    element: element.tagName || element.name,
-                    text: $(element).text(),
-                } as MajorContent)
+        if (!url) return null;
+
+        const { data } = await axios.get(url);
+        const $ = cheerio.load(data);
+
+        const majorInfo = $(
+            '#taxonomy-term-43528 > div > div > div > div > div > div > span > article > div.node__content.clearfix > div'
         )
-        .get()
-        .flat();
+            .children()
+            .map(
+                (index, element) =>
+                    ({
+                        element: element.tagName || element.name,
+                        text: $(element).text(),
+                    } as MajorContent)
+            )
+            .get();
 
-    return { content: majorInfo, name: name || '', url: url || '' };
+        return { url, content: majorInfo, name: name || '' };
+    } catch (error) {
+        return null;
+    }
 };
 
-export const majorsInfoScraper = async (): Promise<Major[]> => {
-    const { data } = await axios.get(
-        'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopnia'
-    );
+export const majorsInfoScraper = async (): Promise<Major[] | ErrorType> => {
+    try {
+        const { data } = await axios.get(
+            'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopnia'
+        );
 
-    const $ = cheerio.load(data);
+        const $ = cheerio.load(data);
 
-    const majorsNavElementPath =
-        '#block-ug-mfi-theme-menu-glowne > ul > li.nav-item.menu-item--expanded.menu-item--active-trail > ul > li';
+        const majorsNavElementPath =
+            '#block-ug-mfi-theme-menu-glowne > ul > li.nav-item.menu-item--expanded.menu-item--active-trail > ul > li';
 
-    const majors = $(majorsNavElementPath)
-        .map((index, element): Partial<Major> => {
-            const majorEndpoint = $(element).find('a').attr('href');
-            const majorName = $(element).find('a').text();
+        const majors = $(majorsNavElementPath)
+            .map((index, element): Partial<Major> => {
+                const majorEndpoint = $(element).find('a').attr('href');
+                const majorName = $(element).find('a').text();
 
+                return {
+                    name: majorName,
+                    url: 'https://mfi.ug.edu.pl' + majorEndpoint,
+                };
+            })
+            .get();
+
+        const majorsFullInfo = await Promise.all(
+            majors.map((major) => majorScraper(major))
+        );
+
+        return majorsFullInfo.filter((major): major is Major => major !== null);
+    } catch (error) {
+        // @ts-ignore
+        if (error?.response?.status === 404) {
             return {
-                name: majorName,
-                url: 'https://mfi.ug.edu.pl' + majorEndpoint,
+                // @ts-ignore
+                status: error.response.status,
+                message: 'Sorry! Could not find majors',
             };
-        })
-        .get();
+        }
 
-    const majorsFullInfo = await Promise.all(
-        majors.map((major) => majorScraper(major))
-    );
+        // @ts-ignore
+        if (error?.response?.status) {
+            return {
+                // @ts-ignore
+                status: error.response.status,
+                message: 'Something went wrong',
+            };
+        }
 
-    console.log(majorsFullInfo);
-
-    return majorsFullInfo;
+        return { status: 500, message: 'Something went wrong' };
+    }
 };
