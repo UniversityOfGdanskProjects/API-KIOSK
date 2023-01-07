@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import mongoose from 'mongoose';
+import majorsRouter from './Routes/majors.route';
 
 const dotenv = require('dotenv');
 
@@ -15,9 +16,7 @@ mongoose
     .connect(connectionString)
     .then(() => console.log('Connected with MongoDB'));
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello World');
-});
+app.use(majorsRouter);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
