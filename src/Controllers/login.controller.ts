@@ -1,35 +1,32 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { checkLoginData } from 'Services/login.service';
 import { User } from 'Types/User';
 import jswonwebtoken from 'jsonwebtoken';
+import { TypedRequestBody } from 'Types/TypedRequestBody';
 
 export const loginController = async (
-    req: Request,
+    req: TypedRequestBody<User>,
     res: Response
-): Promise<void> => {
+) => {
     try {
         const userData: User = req.body;
 
         const user = await checkLoginData(userData);
 
         if (user === null) {
-            res.sendStatus(401);
-            return;
+            return res.status(401).send('Invalid login or password.');
         }
 
         const jwtSecret = process.env.JWT_SECRET;
 
         if (!jwtSecret) {
-            res.sendStatus(500);
-            return;
+            return res.sendStatus(500);
         }
 
         const accessToken = jswonwebtoken.sign(user.login, jwtSecret);
 
-        res.json({ userData: user, jwt_token: accessToken });
-        return;
+        return res.json({ userData: user, jwt_token: accessToken });
     } catch (e) {
-        res.sendStatus(500);
-        return;
+        return res.sendStatus(500);
     }
 };
