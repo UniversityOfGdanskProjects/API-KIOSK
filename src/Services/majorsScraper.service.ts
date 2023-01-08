@@ -1,3 +1,4 @@
+import { checkForHtmlInText } from '../Utils/checkForHtmlInText';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import { Major, MajorContent } from '../Types/major.type';
@@ -22,13 +23,21 @@ const majorScraper = async (
             '.taxonomy-term > div > div > div > div > div > div > span > article > div.node__content.clearfix > div'
         )
             .children()
-            .map(
-                (index, element) =>
-                    ({
+            .map((index, element) => {
+                const elementHTML = $(element).html();
+
+                if (checkForHtmlInText(elementHTML || '')) {
+                    return {
                         element: element.tagName || element.name,
-                        text: $(element).text(),
-                    } as MajorContent)
-            )
+                        text: elementHTML!,
+                    };
+                }
+
+                return {
+                    element: element.tagName || element.name,
+                    text: $(element).text(),
+                } as MajorContent;
+            })
             .get();
 
         return { url, content: majorInfo, name: name || '' };
