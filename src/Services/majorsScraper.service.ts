@@ -27,6 +27,9 @@ const majorScraper = async (
             .map((index, element) => {
                 const elementHTML = $(element).html();
 
+                if (element.tagName == 'style' || element.name == 'style')
+                    return;
+
                 if (checkForHtmlInText(elementHTML || '')) {
                     return {
                         element: element.tagName || element.name,
