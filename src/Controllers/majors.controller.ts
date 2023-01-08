@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { Major } from 'Types/major.type';
+import { Major } from '../Types/major.type';
 import { majorsInfoScraper } from '../Services/majorsScraper.service';
 
 export const getAllMajors: RequestHandler = async (

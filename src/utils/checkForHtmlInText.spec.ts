@@ -1,4 +1,4 @@
-import { checkForHtmlInText } from 'Utils/checkForHtmlInText';
+import { checkForHtmlInText } from './checkForHtmlInText';
 
 describe('checkForHtmlInText', () => {
     it('li tag occurs in the string argument', () => {
