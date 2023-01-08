@@ -9,6 +9,48 @@ interface ErrorType {
     message: string;
 }
 
+const prepareITURLs = async (): Promise<Partial<Major>[]> => {
+    const url =
+        'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopnia/informatyka/tryb-stacjonarny';
+
+    const { data } = await axios.get(url);
+    const $ = cheerio.load(data);
+
+    const ITMajorsURLs = $('#block-ug-mfi-theme-menu-glowne > ul')
+        .children()
+        .map((index, element): Partial<Major> | Partial<Major>[] => {
+            const majorEndpoint = $(element).find('a').attr('href');
+            const majorName = $(element).find('a').text();
+
+            if (
+                majorName ===
+                'Tryb stacjonarnyProfil ogólnoakademickiProfil praktyczny'
+            ) {
+                return $(
+                    '#block-ug-mfi-theme-menu-glowne > ul > li.nav-item.menu-item--expanded.menu-item--active-trail > ul > li > a'
+                )
+                    .map((index, element): Partial<Major> => {
+                        const majorEndpoint = $(element).attr('href');
+                        const majorName = $(element).text();
+
+                        return {
+                            name: majorName,
+                            url: 'https://mfi.ug.edu.pl' + majorEndpoint,
+                        };
+                    })
+                    .get();
+            }
+
+            return {
+                name: majorName,
+                url: 'https://mfi.ug.edu.pl' + majorEndpoint,
+            };
+        })
+        .get();
+
+    return ITMajorsURLs;
+};
+
 const majorScraper = async (
     partialMajor: Partial<Major>
 ): Promise<Major | null> => {
@@ -34,7 +76,7 @@ const majorScraper = async (
                     return {
                         element: element.tagName || element.name,
                         text: parseHTMLInText(elementHTML!),
-                    };
+                    } as MajorContent;
                 }
 
                 return {
@@ -61,20 +103,31 @@ export const majorsInfoScraper = async (): Promise<Major[] | ErrorType> => {
         const majorsNavElementPath =
             '#block-ug-mfi-theme-menu-glowne > ul > li.nav-item.menu-item--expanded.menu-item--active-trail > ul > li';
 
-        const majors = $(majorsNavElementPath)
-            .map((index, element): Partial<Major> => {
-                const majorEndpoint = $(element).find('a').attr('href');
-                const majorName = $(element).find('a').text();
+        const majors = await Promise.all(
+            $(majorsNavElementPath)
+                .map(
+                    async (
+                        index,
+                        element
+                    ): Promise<Partial<Major> | Partial<Major>[]> => {
+                        const majorEndpoint = $(element).find('a').attr('href');
+                        const majorName = $(element).find('a').text();
 
-                return {
-                    name: majorName,
-                    url: 'https://mfi.ug.edu.pl' + majorEndpoint,
-                };
-            })
-            .get();
+                        if (majorName === 'Informatyka') {
+                            return await prepareITURLs();
+                        }
+
+                        return {
+                            name: majorName,
+                            url: 'https://mfi.ug.edu.pl' + majorEndpoint,
+                        };
+                    }
+                )
+                .get()
+        );
 
         const majorsFullInfo = await Promise.all(
-            majors.map((major) => majorScraper(major))
+            majors.flat().map((major) => majorScraper(major))
         );
 
         return majorsFullInfo.filter((major): major is Major => major !== null);
