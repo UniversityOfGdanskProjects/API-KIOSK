@@ -50,9 +50,7 @@ const majorScraper = async (
     }
 };
 
-export const majorsInfoScraper = async (): Promise<
-    (Major | null)[] | ErrorType
-> => {
+export const majorsInfoScraper = async (): Promise<Major[] | ErrorType> => {
     try {
         const { data } = await axios.get(
             'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopnia'
