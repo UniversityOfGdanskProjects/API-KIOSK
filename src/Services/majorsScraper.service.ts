@@ -2,6 +2,7 @@ import { checkForHtmlInText } from '../Utils/checkForHtmlInText';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import { Major, MajorContent } from '../Types/major.type';
+import { parseHTMLInText } from '../Utils/parseHTMLInText';
 
 interface ErrorType {
     status: number;
@@ -29,13 +30,13 @@ const majorScraper = async (
                 if (checkForHtmlInText(elementHTML || '')) {
                     return {
                         element: element.tagName || element.name,
-                        text: elementHTML!,
+                        text: parseHTMLInText(elementHTML!),
                     };
                 }
 
                 return {
                     element: element.tagName || element.name,
-                    text: $(element).text(),
+                    text: parseHTMLInText($(element).text()),
                 } as MajorContent;
             })
             .get();
@@ -46,7 +47,9 @@ const majorScraper = async (
     }
 };
 
-export const majorsInfoScraper = async (): Promise<Major[] | ErrorType> => {
+export const majorsInfoScraper = async (): Promise<
+    (Major | null)[] | ErrorType
+> => {
     try {
         const { data } = await axios.get(
             'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopnia'
