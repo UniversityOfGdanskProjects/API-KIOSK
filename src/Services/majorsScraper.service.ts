@@ -19,7 +19,7 @@ const majorScraper = async (
         const $ = cheerio.load(data);
 
         const majorInfo = $(
-            '#taxonomy-term-43528 > div > div > div > div > div > div > span > article > div.node__content.clearfix > div'
+            '.taxonomy-term > div > div > div > div > div > div > span > article > div.node__content.clearfix > div'
         )
             .children()
             .map(
