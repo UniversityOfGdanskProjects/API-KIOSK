@@ -4,7 +4,7 @@ import cheerio from 'cheerio';
 import { Major, MajorContent } from '../Types/major.type';
 import { parseHTMLInText } from '../Utils/parseHTMLInText';
 
-interface ErrorType {
+export interface ErrorType {
     status: number;
     message: string;
 }
@@ -95,7 +95,7 @@ const majorScraper = async (
 export const majorsInfoScraper = async (): Promise<Major[] | ErrorType> => {
     try {
         const { data } = await axios.get(
-            'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopnia'
+            'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopniaasdasda'
         );
 
         const $ = cheerio.load(data);

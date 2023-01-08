@@ -1,12 +1,18 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { Major } from 'Types/major.type';
 import { majorsInfoScraper } from '../Services/majorsScraper.service';
 
 export const getAllMajors: RequestHandler = async (
     req: Request,
-    res: Response,
+    res: Response<Major[] | string>,
     next: NextFunction
 ) => {
     const majors = await majorsInfoScraper();
 
-    res.send(JSON.stringify(majors));
+    if ('status' in majors) {
+        res.status(majors.status).send(majors.message);
+        return;
+    }
+
+    res.send(majors);
 };
