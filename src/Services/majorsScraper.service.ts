@@ -16,30 +16,10 @@ const prepareITURLs = async (): Promise<Partial<Major>[]> => {
     const { data } = await axios.get(url);
     const $ = cheerio.load(data);
 
-    const ITMajorsURLs = $('#block-ug-mfi-theme-menu-glowne > ul')
-        .children()
+    const ITMajorsURLs = $('#block-ug-mfi-theme-menu-glowne > ul a')
         .map((index, element): Partial<Major> | Partial<Major>[] => {
-            const majorEndpoint = $(element).find('a').attr('href');
-            const majorName = $(element).find('a').text();
-
-            if (
-                majorName ===
-                'Tryb stacjonarnyProfil ogólnoakademickiProfil praktyczny'
-            ) {
-                return $(
-                    '#block-ug-mfi-theme-menu-glowne > ul > li.nav-item.menu-item--expanded.menu-item--active-trail > ul > li > a'
-                )
-                    .map((index, element): Partial<Major> => {
-                        const majorEndpoint = $(element).attr('href');
-                        const majorName = $(element).text();
-
-                        return {
-                            name: majorName,
-                            url: 'https://mfi.ug.edu.pl' + majorEndpoint,
-                        };
-                    })
-                    .get();
-            }
+            const majorEndpoint = $(element).attr('href');
+            const majorName = $(element).text();
 
             return {
                 name: majorName,
@@ -95,7 +75,7 @@ const majorScraper = async (
 export const majorsInfoScraper = async (): Promise<Major[] | ErrorType> => {
     try {
         const { data } = await axios.get(
-            'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopniaasdasda'
+            'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopnia'
         );
 
         const $ = cheerio.load(data);
