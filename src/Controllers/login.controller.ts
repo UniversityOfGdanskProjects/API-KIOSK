@@ -9,7 +9,7 @@ export const loginController = async (
     res: Response
 ) => {
     try {
-        const userData: User = req.body;
+        const userData = req.body;
 
         const user = await checkLoginData(userData);
 
