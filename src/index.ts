@@ -1,6 +1,7 @@
 import { connectToDB } from './Configs/db.config';
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import loginRouter from './Routes/login.route';
 
 dotenv.config();
 
@@ -9,9 +10,7 @@ const port = process.env.PORT;
 
 connectToDB();
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello World');
-});
+app.use(loginRouter);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
