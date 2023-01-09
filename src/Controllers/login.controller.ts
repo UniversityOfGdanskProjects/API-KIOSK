@@ -1,8 +1,8 @@
+import { TypedRequestBody } from '../Types/TypedRequestBody';
+import { checkLoginData } from '../Services/login.service';
 import { Response } from 'express';
-import { checkLoginData } from 'Services/login.service';
 import { User } from 'Types/User';
 import jswonwebtoken from 'jsonwebtoken';
-import { TypedRequestBody } from 'Types/TypedRequestBody';
 
 export const loginController = async (
     req: TypedRequestBody<User>,
