@@ -13,29 +13,29 @@ describe('Test of login service', () => {
         hashedPassword = await bcrypt.hash('password', 10);
 
         await UsersModel.create({
-            login: 'login',
+            login: 'login_service',
             password: hashedPassword,
         });
     });
 
     afterAll(async () => {
-        await UsersModel.deleteOne({ login: 'login' });
+        await UsersModel.deleteOne({ login: 'login_service' });
         await mongoose.disconnect();
     });
 
     it.only('Correct login data', async () => {
         const foundUser = await checkLoginData({
-            login: 'login',
+            login: 'login_service',
             password: 'password',
         });
 
-        expect(foundUser?.login).toBe('login');
+        expect(foundUser?.login).toBe('login_service');
         expect(foundUser?.password).toBe(hashedPassword);
     });
 
     it.only('Non-existing user', async () => {
         const foundUser = await checkLoginData({
-            login: 'anotherLogin',
+            login: 'anotherLogin_service',
             password: 'anotherPassword',
         });
 
@@ -44,7 +44,7 @@ describe('Test of login service', () => {
 
     it.only('Wrong password', async () => {
         const foundUser = await checkLoginData({
-            login: 'login',
+            login: 'login_service',
             password: 'anotherPassword',
         });
 
