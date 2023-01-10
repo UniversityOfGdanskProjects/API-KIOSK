@@ -1,12 +1,12 @@
 import { loginController } from '../../src/Controllers/login.controller';
 import { TypedRequestBody } from '../../src/Types/TypedRequestBody';
+import { connectToDB } from '../../src/Configs/db.config';
+import { UsersModel } from '../../src/Models/users.model';
 import { mockResponse } from '../utils/mockResponse';
 import { User } from '../../src/Types/User';
 import { Response } from 'express';
-import bcrypt from 'bcrypt';
-import { connectToDB } from '../../src/Configs/db.config';
-import { UsersModel } from '../../src/Models/users.model';
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 describe('Test of login controller', () => {
     let hashedPassword: string;

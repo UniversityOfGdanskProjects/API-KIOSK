@@ -1,8 +1,8 @@
 import { checkLoginData } from '../../src/Services/login.service';
-import bcrypt from 'bcrypt';
 import { connectToDB } from '../../src/Configs/db.config';
 import { UsersModel } from '../../src/Models/users.model';
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 describe('Test of login service', () => {
     let hashedPassword: string;

@@ -1,9 +1,9 @@
+import { connectToDB } from '../../src/Configs/db.config';
+import { UsersModel } from '../../src/Models/users.model';
 import { app, server } from '../../src/index';
+import mongoose from 'mongoose';
 import request from 'supertest';
 import bcrypt from 'bcrypt';
-import { UsersModel } from '../../src/Models/users.model';
-import { connectToDB } from '../../src/Configs/db.config';
-import mongoose from 'mongoose';
 
 describe('Test of login route', () => {
     let hashedPassword: string;
