@@ -1,18 +1,29 @@
-import { loginBeforeAll } from '../utils/login/login.beforeAll';
-import { loginAfterAll } from '../utils/login/login.afterAll';
-import { app } from '../../src/index';
+import { app, server } from '../../src/index';
 import request from 'supertest';
 import bcrypt from 'bcrypt';
+import { UsersModel } from '../../src/Models/users.model';
+import { connectToDB } from '../../src/Configs/db.config';
+import mongoose from 'mongoose';
 
 describe('Test of login route', () => {
     let hashedPassword: string;
 
     beforeAll(async () => {
         hashedPassword = await bcrypt.hash('password', 10);
-        await loginBeforeAll('route', hashedPassword);
+
+        await connectToDB();
+        await UsersModel.create({
+            login: `login_route`,
+            password: hashedPassword,
+        });
     });
 
-    afterAll(loginAfterAll('route'));
+    afterAll(async () => {
+        await UsersModel.deleteOne({ login: `login_route` });
+        await mongoose.disconnect();
+
+        server.close();
+    });
 
     it.only('Correct login data', async () => {
         const loginData = {

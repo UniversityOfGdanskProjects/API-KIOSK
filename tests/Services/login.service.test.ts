@@ -1,17 +1,26 @@
 import { checkLoginData } from '../../src/Services/login.service';
-import { loginBeforeAll } from '../utils/login/login.beforeAll';
-import { loginAfterAll } from '../utils/login/login.afterAll';
 import bcrypt from 'bcrypt';
+import { connectToDB } from '../../src/Configs/db.config';
+import { UsersModel } from '../../src/Models/users.model';
+import mongoose from 'mongoose';
 
 describe('Test of login service', () => {
     let hashedPassword: string;
 
     beforeAll(async () => {
         hashedPassword = await bcrypt.hash('password', 10);
-        await loginBeforeAll('service', hashedPassword);
+
+        await connectToDB();
+        await UsersModel.create({
+            login: `login_service`,
+            password: hashedPassword,
+        });
     });
 
-    afterAll(loginAfterAll('service'));
+    afterAll(async () => {
+        await UsersModel.deleteOne({ login: `login_service` });
+        await mongoose.disconnect();
+    });
 
     it.only('Correct login data', async () => {
         const foundUser = await checkLoginData({

@@ -1,21 +1,30 @@
 import { loginController } from '../../src/Controllers/login.controller';
 import { TypedRequestBody } from '../../src/Types/TypedRequestBody';
-import { loginBeforeAll } from '../utils/login/login.beforeAll';
-import { loginAfterAll } from '../utils/login/login.afterAll';
 import { mockResponse } from '../utils/mockResponse';
 import { User } from '../../src/Types/User';
 import { Response } from 'express';
 import bcrypt from 'bcrypt';
+import { connectToDB } from '../../src/Configs/db.config';
+import { UsersModel } from '../../src/Models/users.model';
+import mongoose from 'mongoose';
 
 describe('Test of login controller', () => {
     let hashedPassword: string;
 
     beforeAll(async () => {
         hashedPassword = await bcrypt.hash('password', 10);
-        await loginBeforeAll('controller', hashedPassword);
+
+        await connectToDB();
+        await UsersModel.create({
+            login: `login_controller`,
+            password: hashedPassword,
+        });
     });
 
-    afterAll(loginAfterAll('controller'));
+    afterAll(async () => {
+        await UsersModel.deleteOne({ login: `login_controller` });
+        await mongoose.disconnect();
+    });
 
     it.only('Correct login data', async () => {
         const request = {
