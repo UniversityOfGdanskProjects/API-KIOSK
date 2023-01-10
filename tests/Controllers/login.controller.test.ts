@@ -2,28 +2,19 @@ import { loginController } from '../../src/Controllers/login.controller';
 import { TypedRequestBody } from '../../src/Types/TypedRequestBody';
 import { connectToDB } from '../../src/Configs/db.config';
 import { UsersModel } from '../../src/Models/users.model';
+import { mockResponse } from '../utils/mockResponse';
 import { User } from '../../src/Types/User';
-import bcrypt from 'bcrypt';
-import mongoose from 'mongoose';
 import { Response } from 'express';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 describe('Test of login controller', () => {
-    const mockResponse = () => {
-        const res: Partial<Response> = {};
-        res.json = jest.fn().mockReturnValue(res);
-        res.status = jest.fn().mockReturnValue(res);
-        res.send = jest.fn().mockReturnValue(res);
-
-        return res;
-    };
-
     let hashedPassword: string;
 
     beforeAll(async () => {
-        await connectToDB();
-
         hashedPassword = await bcrypt.hash('password', 10);
 
+        await connectToDB();
         await UsersModel.create({
             login: 'login_controller',
             password: hashedPassword,
