@@ -13,13 +13,13 @@ describe('Test of login route', () => {
 
         await connectToDB();
         await UsersModel.create({
-            login: `login_route`,
+            login: 'login_route',
             password: hashedPassword,
         });
     });
 
     afterAll(async () => {
-        await UsersModel.deleteOne({ login: `login_route` });
+        await UsersModel.deleteOne({ login: 'login_route' });
         await mongoose.disconnect();
 
         server.close();

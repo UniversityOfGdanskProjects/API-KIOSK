@@ -16,13 +16,13 @@ describe('Test of login controller', () => {
 
         await connectToDB();
         await UsersModel.create({
-            login: `login_controller`,
+            login: 'login_controller',
             password: hashedPassword,
         });
     });
 
     afterAll(async () => {
-        await UsersModel.deleteOne({ login: `login_controller` });
+        await UsersModel.deleteOne({ login: 'login_controller' });
         await mongoose.disconnect();
     });
 

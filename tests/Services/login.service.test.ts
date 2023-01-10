@@ -12,13 +12,13 @@ describe('Test of login service', () => {
 
         await connectToDB();
         await UsersModel.create({
-            login: `login_service`,
+            login: 'login_service',
             password: hashedPassword,
         });
     });
 
     afterAll(async () => {
-        await UsersModel.deleteOne({ login: `login_service` });
+        await UsersModel.deleteOne({ login: 'login_service' });
         await mongoose.disconnect();
     });
 
