@@ -9,26 +9,30 @@ export interface ErrorType {
     message: string;
 }
 
-const prepareITURLs = async (): Promise<Partial<Major>[]> => {
-    const url =
-        'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopnia/informatyka/tryb-stacjonarny';
+const prepareITURLs = async (): Promise<Partial<Major>[] | null[]> => {
+    try {
+        const url =
+            'https://mfi.ug.edu.pl/rekrutacja/studia-i-stopnia/informatyka/tryb-stacjonarny';
 
-    const { data } = await axios.get(url);
-    const $ = cheerio.load(data);
+        const { data } = await axios.get(url);
+        const $ = cheerio.load(data);
 
-    const ITMajorsURLs = $('#block-ug-mfi-theme-menu-glowne > ul a')
-        .map((index, element): Partial<Major> | Partial<Major>[] => {
-            const majorEndpoint = $(element).attr('href');
-            const majorName = $(element).text();
+        const ITMajorsURLs = $('#block-ug-mfi-theme-menu-glowne > ul a')
+            .map((index, element): Partial<Major> | Partial<Major>[] => {
+                const majorEndpoint = $(element).attr('href');
+                const majorName = $(element).text();
 
-            return {
-                name: majorName,
-                url: 'https://mfi.ug.edu.pl' + majorEndpoint,
-            };
-        })
-        .get();
+                return {
+                    name: majorName,
+                    url: 'https://mfi.ug.edu.pl' + majorEndpoint,
+                };
+            })
+            .get();
 
-    return ITMajorsURLs;
+        return ITMajorsURLs;
+    } catch (error) {
+        return [null];
+    }
 };
 
 const majorScraper = async (
@@ -89,7 +93,11 @@ export const majorsInfoScraper = async (): Promise<Major[] | ErrorType> => {
                     async (
                         index,
                         element
-                    ): Promise<Partial<Major> | Partial<Major>[]> => {
+                    ): Promise<
+                        | Partial<Major>
+                        | Partial<Major>[]
+                        | (Partial<Major> | null)[]
+                    > => {
                         const majorEndpoint = $(element).find('a').attr('href');
                         const majorName = $(element).find('a').text();
 
@@ -107,7 +115,10 @@ export const majorsInfoScraper = async (): Promise<Major[] | ErrorType> => {
         );
 
         const majorsFullInfo = await Promise.all(
-            majors.flat().map((major) => majorScraper(major))
+            majors
+                .flat()
+                .filter((major): major is Major => major !== null)
+                .map((major) => majorScraper(major))
         );
 
         return majorsFullInfo.filter((major): major is Major => major !== null);

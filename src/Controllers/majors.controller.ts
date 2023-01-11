@@ -10,9 +10,8 @@ export const getAllMajors: RequestHandler = async (
     const majors = await majorsInfoScraper();
 
     if ('status' in majors) {
-        res.status(majors.status).send(majors.message);
-        return;
+        return res.status(majors.status).send(majors.message);
     }
 
-    res.send(majors);
+    return res.send(majors);
 };
