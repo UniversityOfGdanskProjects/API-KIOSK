@@ -1,5 +1,3 @@
-import { ErrorType } from './error.type';
-
 export interface WorkerContent {
     name: string;
     email: string;
