@@ -1,12 +1,9 @@
 import { connectToDB } from './Configs/db.config';
-import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
+import express, { Express } from 'express';
 import loginRouter from './Routes/login.route';
 
-dotenv.config();
-
 const app: Express = express();
-const port = process.env.PORT;
+const port = 3001;
 
 connectToDB();
 
