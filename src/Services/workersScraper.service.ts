@@ -1,7 +1,9 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
+import { WorkerContent, Worker } from '../Types/worker.type';
+import { ErrorType } from '../Types/error.type';
 
-const workerScraper = async (url: string) => {
+const workerScraper = async (url: string): Promise<WorkerContent | null> => {
     try {
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
@@ -9,10 +11,6 @@ const workerScraper = async (url: string) => {
             .text()
             .replace(/\n/gm, '');
         const contact = $('.node-pracownik .group-pracownik-kontakt');
-        const phone = contact
-            .find('.group-pracownik-kontakt div')
-            .first()
-            .text();
         const email = contact.find('.group-pracownik-kontakt .e-mail').text();
 
         const postElements = $('.group-jednostka-stanowisko .term li a');
@@ -32,18 +30,17 @@ const workerScraper = async (url: string) => {
         };
         const worker = {
             name: name,
-            phone: phone,
             email: email,
             posts: posts,
             tutorship: tutorship,
-        };
+        } as WorkerContent;
         return worker;
     } catch (error) {
-        console.log(error);
+        return null;
     }
 };
 
-export const workersScraper = async () => {
+export const workersScraper = async (): Promise<Worker[] | ErrorType> => {
     try {
         const url = 'https://old.mfi.ug.edu.pl/pracownicy_mfi/sklad_osobowy';
         const { data } = await axios.get(url);
@@ -69,7 +66,7 @@ export const workersScraper = async () => {
                         '.jednostki .term-tree-list a'
                     );
                     const units = await Promise.all(
-                        unitElements.map(async (index, elem) => {
+                        unitElements.map((index, elem) => {
                             const name = $(elem).text().replace(/\n/g, '');
                             const link =
                                 'https://old.mfi.ug.edu.pl' +
@@ -82,7 +79,7 @@ export const workersScraper = async () => {
                         link: workerLink,
                         units: units,
                         content: await workerScraper(workerLink),
-                    };
+                    } as Worker;
                 })
                 .get()
         );
