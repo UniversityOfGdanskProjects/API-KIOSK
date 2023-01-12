@@ -4,7 +4,7 @@
     "scripts": {
         "start": "NODE_ENV=production node dist/index.js",
         "dev": "nodemon",
-        "docker:dev": "dotenv -- cross-var docker run -dp %PORT%:%PORT% --name=%DOCKER_NAME% -w /%DIR_NAME% -v $(pwd):/%DIR_NAME% node:18-alpine sh -c 'yarn install && yarn dev'",
+        "up": "docker-compose up",
         "docker:stop": "dotenv -- cross-var docker rm -f %DOCKER_NAME%",
         "docker:unittest": "dotenv -- cross-var docker run --rm -it -w /%DIR_NAME% -v $(pwd):/%DIR_NAME% node:18-alpine sh -c 'yarn install && yarn test:unit'",
         "docker:coverage": "dotenv -- cross-var docker run --rm -it -w /%DIR_NAME% -v $(pwd):/%DIR_NAME% node:18-alpine sh -c 'yarn install && yarn test:coverage'",
