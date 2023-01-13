@@ -7,9 +7,6 @@ const workerScraper = async (url: string): Promise<WorkerContent | null> => {
     try {
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
-        const name = $('.node-pracownik .field-name-title')
-            .text()
-            .replace(/\n/gm, '');
         const contact = $('.node-pracownik .group-pracownik-kontakt');
         const email = contact.find('.group-pracownik-kontakt .e-mail').text();
 
@@ -17,9 +14,7 @@ const workerScraper = async (url: string): Promise<WorkerContent | null> => {
         const posts = await Promise.all(
             postElements.map(async (idx, post) => {
                 const name = $(post).text();
-                const endpoint = $(post).attr('href');
-                const link = 'https://old.mfi.ug.edu.pl' + endpoint;
-                return { name, link };
+                return name;
             })
         );
         const tutorship = {
@@ -29,7 +24,6 @@ const workerScraper = async (url: string): Promise<WorkerContent | null> => {
             link: $('#terminy_konsultacji a').attr('href') || '',
         };
         const worker = {
-            name: name,
             email: email,
             posts: posts,
             tutorship: tutorship,
@@ -68,10 +62,7 @@ export const workersScraper = async (): Promise<Worker[] | ErrorType> => {
                     const units = await Promise.all(
                         unitElements.map((index, elem) => {
                             const name = $(elem).text().replace(/\n/g, '');
-                            const link =
-                                'https://old.mfi.ug.edu.pl' +
-                                $(elem).attr('href');
-                            return { name, link };
+                            return name;
                         })
                     );
                     return {
