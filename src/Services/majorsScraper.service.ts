@@ -1,8 +1,8 @@
-import { checkForHtmlInText } from '../Utils/checkForHtmlInText';
+import { checkForHtmlInText } from '../utils/checkForHtmlInText';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import { Major, MajorContent } from '../Types/major.type';
-import { parseHTMLInText } from '../Utils/parseHTMLInText';
+import { parseHTMLInText } from '../utils/parseHTMLInText';
 
 export interface ErrorType {
     status: number;
