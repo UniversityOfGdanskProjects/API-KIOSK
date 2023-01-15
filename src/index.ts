@@ -1,5 +1,6 @@
-import { connectToDB } from './Configs/db.config';
 import express, { Express } from 'express';
+import { connectToDB } from './Configs/db.config';
+import majorsRouter from './Routes/majors.route';
 import loginRouter from './Routes/login.route';
 import workersRouter from './Routes/workers.route';
 import dotenv from 'dotenv';
@@ -11,6 +12,7 @@ connectToDB();
 
 app.use(express.json());
 
+app.use(majorsRouter);
 app.use(loginRouter);
 app.use(workersRouter);
 
