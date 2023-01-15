@@ -1,23 +1,20 @@
-import express, { Express, Request, Response } from 'express';
-import mongoose from 'mongoose';
+import express, { Express } from 'express';
+import { connectToDB } from './Configs/db.config';
 import majorsRouter from './Routes/majors.route';
-
-const dotenv = require('dotenv');
-
-dotenv.config();
+import loginRouter from './Routes/login.route';
 
 const app: Express = express();
-const port = process.env.PORT;
+const port = 3001;
 
-const connectionString = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_PATH}`;
+connectToDB();
 
-mongoose.set('strictQuery', false);
-mongoose
-    .connect(connectionString)
-    .then(() => console.log('Connected with MongoDB'));
+app.use(express.json());
 
 app.use(majorsRouter);
+app.use(loginRouter);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
+
+export { app, server };

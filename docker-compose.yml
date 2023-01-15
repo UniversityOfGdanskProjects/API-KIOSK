@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+    api-kiosk:
+        image: api-kiosk
+        container_name: api-kiosk
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: dev
+        entrypoint: yarn dev --host 0.0.0.0
+        volumes:
+            - ./src:/app/src
+        ports:
+            - 3001:3001
+        environment:
+            - MONGO_PATH=kiosk.c32e0lo.mongodb.net

@@ -31,6 +31,11 @@ jobs:
               run: yarn test:unit
 
             - name: coverage tests
+              env:
+                  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+                  MONGO_PATH: ${{ secrets.MONGO_PATH }}
+                  MONGO_USER: ${{ secrets.MONGO_USER }}
+                  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
               run: yarn test:coverage
 
             - name: build
