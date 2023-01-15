@@ -36,8 +36,9 @@ const workerScraper = async (url: string): Promise<WorkerContent | null> => {
 
 export const workersScraper = async (): Promise<Worker[] | ErrorType> => {
     try {
-        const url = 'https://old.mfi.ug.edu.pl/pracownicy_mfi/sklad_osobowy';
-        const { data } = await axios.get(url);
+        const { data } = await axios.get(
+            'https://old.mfi.ug.edu.pl/pracownicy_mfi/sklad_osobowy'
+        );
         const $ = cheerio.load(data);
 
         const selectedElement = $(

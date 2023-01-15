@@ -1,8 +1,8 @@
 import { connectToDB } from './Configs/db.config';
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
+import loginRouter from './Routes/login.route';
 import workersRouter from './Routes/workers.route';
 import dotenv from 'dotenv';
-import loginRouter from './Routes/login.route';
 
 dotenv.config();
 

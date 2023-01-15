@@ -1,6 +1,6 @@
 export interface WorkerContent {
     email: string;
-    posts: Array<string>;
+    posts: string[];
     tutorship: {
         schedule: string;
         link: string;
@@ -10,6 +10,6 @@ export interface WorkerContent {
 export interface Worker {
     name: string;
     link: string;
-    units: Array<string>;
+    units: string[];
     content: WorkerContent;
 }
