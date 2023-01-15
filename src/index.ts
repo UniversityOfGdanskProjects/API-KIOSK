@@ -4,10 +4,8 @@ import loginRouter from './Routes/login.route';
 import workersRouter from './Routes/workers.route';
 import dotenv from 'dotenv';
 
-dotenv.config();
-
 const app: Express = express();
-const port = process.env.PORT;
+const port = 3001;
 
 connectToDB();
 

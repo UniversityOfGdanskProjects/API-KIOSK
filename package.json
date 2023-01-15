@@ -4,11 +4,7 @@
     "scripts": {
         "start": "NODE_ENV=production node dist/index.js",
         "dev": "nodemon",
-        "docker:dev": "dotenv -- cross-var docker run -dp %PORT%:%PORT% --name=%DOCKER_NAME% -w /%DIR_NAME% -v $(pwd):/%DIR_NAME% node:18-alpine sh -c 'yarn install && yarn dev'",
-        "docker:stop": "dotenv -- cross-var docker rm -f %DOCKER_NAME%",
-        "docker:unittest": "dotenv -- cross-var docker run --rm -it -w /%DIR_NAME% -v $(pwd):/%DIR_NAME% node:18-alpine sh -c 'yarn install && yarn test:unit'",
-        "docker:coverage": "dotenv -- cross-var docker run --rm -it -w /%DIR_NAME% -v $(pwd):/%DIR_NAME% node:18-alpine sh -c 'yarn install && yarn test:coverage'",
-        "docker:build": "dotenv -- cross-var docker build -t %DOCKER_TAG% --build-arg PORT=%PORT% --build-arg MONGO_PATH=%MONGO_PATH% --build-arg MONGO_USER=%MONGO_USER% --build-arg MONGO_PASSWORD=%MONGO_PASSWORD% .",
+        "up": "docker-compose up",
         "build": "tsc",
         "test:unit": "jest --testPathPattern=src/utils",
         "test:coverage": "jest --coverage --testPathPattern=tests/",
