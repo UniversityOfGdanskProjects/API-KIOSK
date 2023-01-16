@@ -22,12 +22,12 @@ const facultyMemberScraper = async (
         const tutorial = $('#terminy_konsultacji p')
             .get()
             .reduce((acc, p) => (acc += $(p).text() + '\n'), '');
-        const worker = {
+        const content = {
             email: email,
             posts: posts,
             tutorial: tutorial,
         } as AcademicContent;
-        return worker;
+        return content;
     } catch (error) {
         return null;
     }
