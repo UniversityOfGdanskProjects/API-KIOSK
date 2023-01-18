@@ -6,7 +6,7 @@ import { transformCSVHeader } from '../utils/transformCSVHeader';
 import { transformCSVField } from '../utils/transformCSVField';
 import { checkIfFaculty } from '../utils/checkIfFaculty';
 import cheerio from 'cheerio';
-import Papa from 'papaparse';
+import Papa, { ParseResult } from 'papaparse';
 import * as _ from 'lodash';
 import axios from 'axios';
 
@@ -26,21 +26,23 @@ const getDataFromCSV = async (
             `https://inf.ug.edu.pl/plan/${url}&format=csv`
         );
 
-        const results = Papa.parse(csv.data, parserConfig).data;
+        const results: Partial<LessonsPlanEntry>[] = Papa.parse<
+            Partial<LessonsPlanEntry>
+        >(csv.data, parserConfig).data;
 
-        const withoutLastLine = results.splice(0, results.length - 1);
-
-        const finalResults: Array<LessonsPlanEntry> = withoutLastLine.map(
-            (result: any) => {
-                result.isFaculty = type === 'faculty';
-
-                if (type === 'seminar') {
-                    result.type = 'seminarium';
-                }
-
-                return result;
-            }
+        const withoutEmptyLines = results.filter(
+            (result) => Object.keys(result).length > 1
         );
+
+        const finalResults = withoutEmptyLines.map((result) => {
+            result.isFaculty = type === 'faculty';
+
+            if (type === 'seminar') {
+                result.type = 'seminarium';
+            }
+
+            return result as LessonsPlanEntry;
+        });
 
         return finalResults;
     } catch (error) {
@@ -53,14 +55,15 @@ const getAllUrls = async (
 ): Promise<LessonsPlanURLObject> => {
     try {
         const mainURL = 'https://inf.ug.edu.pl/plan/';
-        const planURLObject: LessonsPlanURLObject = { name: '', main: '' };
-
-        planURLObject.main = currentURL;
 
         const { data } = await axios.get(mainURL + currentURL);
         const $ = cheerio.load(data);
         const name = $('div > h1').text();
-        planURLObject.name = name;
+
+        const planURLObject: LessonsPlanURLObject = {
+            name: name,
+            main: currentURL,
+        };
 
         const otherURLs = $('div.uwaga > a')
             .map((index, element) => element.attribs.href)
@@ -115,7 +118,7 @@ const getPlansURLs = async (): Promise<LessonsPlanURLObject[]> => {
 };
 
 export const lessonPlansScrapper = async (): Promise<
-    Array<MajorLessonsPlanObject>
+    MajorLessonsPlanObject[]
 > => {
     try {
         const plansURLObjects = await getPlansURLs();
@@ -145,6 +148,7 @@ export const lessonPlansScrapper = async (): Promise<
                 }
 
                 const grouped = _.groupBy(allLessons, 'day');
+
                 return { [`${url.name}`]: grouped };
             })
         );

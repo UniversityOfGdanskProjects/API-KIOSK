@@ -7,7 +7,7 @@ export interface LessonsPlanEntry {
     teacher: string;
     class: string | number;
     type: string;
-    info: Array<string>;
+    info: string[];
     start_date: string;
     end_date: string;
     isFaculty: boolean;

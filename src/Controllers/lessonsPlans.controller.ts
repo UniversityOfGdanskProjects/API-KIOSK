@@ -4,7 +4,7 @@ import { Request, RequestHandler, Response } from 'express';
 
 export const getAllLessonsPlans: RequestHandler = async (
     req: Request,
-    res: Response<Array<MajorLessonsPlanObject>>
+    res: Response<MajorLessonsPlanObject[]>
 ) => {
     try {
         const lessonsPlans = await lessonPlansScrapper();
