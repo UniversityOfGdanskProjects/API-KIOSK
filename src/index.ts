@@ -4,6 +4,7 @@ import cors from 'cors';
 import majorsRouter from './Routes/majors.route';
 import loginRouter from './Routes/login.route';
 import staffRouter from './Routes/staff.route';
+import eventsRouter from './Routes/events.route';
 
 const app: Express = express();
 const port = 3001;
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(majorsRouter);
 app.use(loginRouter);
 app.use(staffRouter);
+app.use(eventsRouter);
 
 const server = app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
