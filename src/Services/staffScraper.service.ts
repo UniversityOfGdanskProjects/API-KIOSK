@@ -3,6 +3,12 @@ import cheerio from 'cheerio';
 import { AcademicContent, Academic } from '../Types/staff.type';
 import { ErrorType } from '../Types/error.type';
 
+const removeDuplicates = async (arr: string[]) => {
+    return arr.filter((elem, index, self) => {
+        return index === self.indexOf(elem);
+    });
+};
+
 const facultyMemberScraper = async (
     url: string
 ): Promise<AcademicContent | null> => {
@@ -19,12 +25,13 @@ const facultyMemberScraper = async (
                 return name;
             })
         );
+        const filteredPosts = await removeDuplicates(posts);
         const tutorial = $('#terminy_konsultacji p')
             .get()
             .reduce((acc, p) => (acc += $(p).text() + '\n'), '');
         const content = {
             email: email,
-            posts: posts,
+            posts: filteredPosts,
             tutorial: tutorial,
         } as AcademicContent;
         return content;
