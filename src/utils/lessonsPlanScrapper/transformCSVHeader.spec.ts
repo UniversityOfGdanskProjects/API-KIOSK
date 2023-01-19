@@ -21,14 +21,14 @@ describe('transformCSVHeader', () => {
         expect(result).toBe('subject');
     });
 
-    it.only("transform 'grupa' to 'group'", () => {
+    it.only("transform 'grupa' to 'groups'", () => {
         const result = transformCSVHeader('grupa', 0);
-        expect(result).toBe('group');
+        expect(result).toBe('groups');
     });
 
-    it.only("transform 'nauczyciel' to 'teacher'", () => {
+    it.only("transform 'nauczyciel' to 'teachers'", () => {
         const result = transformCSVHeader('nauczyciel', 0);
-        expect(result).toBe('teacher');
+        expect(result).toBe('teachers');
     });
 
     it.only("transform 'sala' to 'class'", () => {

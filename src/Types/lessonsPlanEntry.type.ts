@@ -1,15 +1,20 @@
 export interface LessonsPlanEntry {
+    name: string;
+    year: number;
     day: string;
     start: number;
     duration: number;
-    subject: string;
-    group?: string;
-    teacher: string;
+    groups: string[];
+    teachers: string[];
     class: string | number;
-    type: string;
-    info: string[];
-    start_date: string;
-    end_date: string;
-    isFaculty: boolean;
-    isSeminar: boolean;
+    pl: {
+        subject: string;
+        type: string;
+        info: string[];
+    };
+    eng: {
+        subject?: string;
+        type?: string;
+        info?: string[];
+    };
 }

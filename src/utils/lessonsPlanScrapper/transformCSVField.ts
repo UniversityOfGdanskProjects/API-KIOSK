@@ -22,8 +22,7 @@ export const transformCSVField = (
     if (field === 'info') {
         if (value === '') return [];
 
-        const splitted = value.split('; ');
-        return splitted;
+        return value.split('; ');
     }
 
     if (field === 'day') return transformDay(value);
@@ -42,6 +41,10 @@ export const transformCSVField = (
 
         return value;
     }
+
+    if (field === 'groups') return value.split('+');
+
+    if (field === 'teachers') return value.split('+');
 
     return value;
 };

@@ -9,9 +9,9 @@ export const transformCSVHeader = (header: string, index: number): string => {
         case 'przedmiot':
             return 'subject';
         case 'grupa':
-            return 'group';
+            return 'groups';
         case 'nauczyciel':
-            return 'teacher';
+            return 'teachers';
         case 'sala':
             return 'class';
         case 'typ':

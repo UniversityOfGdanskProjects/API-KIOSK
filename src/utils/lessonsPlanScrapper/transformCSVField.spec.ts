@@ -43,4 +43,30 @@ describe('transformCSVField', () => {
         const result = transformCSVField('wyk.+lab.', 'type');
         expect(result).toBe('laboratorium i wykład');
     });
+
+    it.only("Transforms groups 'gr1+gr2' to array", () => {
+        const result = transformCSVField('gr1+gr2', 'groups');
+
+        expect(result[0]).toBe('gr1');
+        expect(result[1]).toBe('gr2');
+    });
+
+    it.only("Transforms groups 'gr1' to array", () => {
+        const result = transformCSVField('gr1', 'groups');
+
+        expect(result[0]).toBe('gr1');
+    });
+
+    it.only("Transforms teachers 'teacher1+teacher2' to array", () => {
+        const result = transformCSVField('teacher1+teacher2', 'teachers');
+
+        expect(result[0]).toBe('teacher1');
+        expect(result[1]).toBe('teacher2');
+    });
+
+    it.only("Transforms teachers 'teacher1' to array", () => {
+        const result = transformCSVField('teacher1', 'teachers');
+
+        expect(result[0]).toBe('teacher1');
+    });
 });

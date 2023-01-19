@@ -1,20 +1,69 @@
-import { MajorLessonsPlanObject } from '../Types/majorLessonsPlanObject.type';
+import { checkIfFaculty } from '../utils/lessonsPlanScrapper/checkIfFaculty';
 import { LessonsPlanURLObject } from '../Types/lessonsPlanURLObject.type';
 import { LessonsPlanEntry } from '../Types/lessonsPlanEntry.type';
-import { getURLWithoutQuery } from '../utils/getURLWithoutQuery';
-import { transformCSVHeader } from '../utils/transformCSVHeader';
-import { transformCSVField } from '../utils/transformCSVField';
-import { checkIfFaculty } from '../utils/checkIfFaculty';
+import { PlanEntryFromCSV } from '../Types/planEntryFromCSV.type';
+import {
+    getYearFromMajorName,
+    getURLWithoutQuery,
+    transformCSVHeader,
+    transformGroupName,
+    transformCSVField,
+} from '../utils/lessonsPlanScrapper';
 import cheerio from 'cheerio';
-import Papa, { ParseResult } from 'papaparse';
+import Papa from 'papaparse';
 import * as _ from 'lodash';
 import axios from 'axios';
+import { ErrorType } from 'Types/error.type';
 
-const getDataFromCSV = async (
+export const getDataFromCSV = async (
     url: string,
-    type: 'main' | 'seminar' | 'faculty'
+    classType: 'main' | 'seminar' | 'faculty',
+    majorName: string
 ): Promise<LessonsPlanEntry[]> => {
     try {
+        const mapResult = (
+            entryFromCSV: PlanEntryFromCSV,
+            mainGroupName: string
+        ): LessonsPlanEntry => {
+            const {
+                subject,
+                groups,
+                type,
+                info,
+                start_date,
+                end_date,
+                ...rest
+            } = entryFromCSV;
+
+            const { name, year } = getYearFromMajorName(majorName);
+
+            const entryGroup = groups
+                ? groups.map((group) =>
+                      transformGroupName(mainGroupName, group)
+                  )
+                : [];
+
+            if (entryGroup.length === 0)
+                entryGroup.push(
+                    classType === 'faculty' ? 'fakultet' : 'seminarium'
+                );
+
+            const result: LessonsPlanEntry = {
+                name: name,
+                year: year,
+                ...rest,
+                groups: entryGroup,
+                pl: {
+                    subject: subject,
+                    type: type,
+                    info: info,
+                },
+                eng: {},
+            };
+
+            return result;
+        };
+
         const parserConfig = {
             header: true,
             dynamicTyping: true,
@@ -26,22 +75,26 @@ const getDataFromCSV = async (
             `https://inf.ug.edu.pl/plan/${url}&format=csv`
         );
 
-        const results: Partial<LessonsPlanEntry>[] = Papa.parse<
-            Partial<LessonsPlanEntry>
-        >(csv.data, parserConfig).data;
+        const results: PlanEntryFromCSV[] = Papa.parse<PlanEntryFromCSV>(
+            csv.data,
+            parserConfig
+        ).data;
 
         const withoutEmptyLines = results.filter(
             (result) => Object.keys(result).length > 1
         );
 
         const finalResults = withoutEmptyLines.map((result) => {
-            result.isFaculty = type === 'faculty';
+            if (
+                url.startsWith('fiz/') &&
+                !majorName.includes('bezpieczeństwo jądrowe')
+            ) {
+                const [mainGroupName] = url.split('=');
 
-            if (type === 'seminar') {
-                result.type = 'seminarium';
+                return mapResult(result, mainGroupName);
             }
 
-            return result as LessonsPlanEntry;
+            return mapResult(result, majorName);
         });
 
         return finalResults;
@@ -118,23 +171,33 @@ const getPlansURLs = async (): Promise<LessonsPlanURLObject[]> => {
 };
 
 export const lessonPlansScrapper = async (): Promise<
-    MajorLessonsPlanObject[]
+    LessonsPlanEntry[] | ErrorType
 > => {
     try {
         const plansURLObjects = await getPlansURLs();
+
+        if (!plansURLObjects)
+            return {
+                status: 500,
+                message: "Couldn't find any lessons plans URLs",
+            };
 
         const allLessonsPlans = await Promise.all(
             plansURLObjects.map(async (url: LessonsPlanURLObject) => {
                 const allLessons = [];
 
-                const mainLessons = await getDataFromCSV(url.main, 'main');
-
+                const mainLessons = await getDataFromCSV(
+                    url.main,
+                    'main',
+                    url.name
+                );
                 allLessons.push(...mainLessons);
 
                 if (url.faculty) {
                     const facultyLessons = await getDataFromCSV(
                         url.faculty,
-                        'faculty'
+                        'faculty',
+                        url.name
                     );
                     allLessons.push(...facultyLessons);
                 }
@@ -142,19 +205,41 @@ export const lessonPlansScrapper = async (): Promise<
                 if (url.seminar) {
                     const seminarLessons = await getDataFromCSV(
                         url.seminar,
-                        'seminar'
+                        'seminar',
+                        url.name
                     );
                     allLessons.push(...seminarLessons);
                 }
 
-                const grouped = _.groupBy(allLessons, 'day');
-
-                return { [`${url.name}`]: grouped };
+                return allLessons;
             })
         );
 
-        return allLessonsPlans;
-    } catch {
-        return [];
+        const result = allLessonsPlans.reduce((acc, lessonsArray) => {
+            acc.push(...lessonsArray);
+
+            return acc;
+        }, []);
+
+        return result;
+    } catch (error: any) {
+        if (error.response.status === 404) {
+            return {
+                status: error.response.status,
+                message: 'Sorry! Lessons plan sites are not responding',
+            };
+        }
+
+        if (error.response.status) {
+            return {
+                status: error.response.status,
+                message: 'Something went wrong with one of the requests',
+            };
+        }
+
+        return {
+            status: 500,
+            message: 'Something went wrong with lessons plan scrapper',
+        };
     }
 };
