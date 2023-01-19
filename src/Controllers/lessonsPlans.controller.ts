@@ -1,14 +1,14 @@
 import { Request, RequestHandler, Response } from 'express';
 import { LessonsPlanEntry } from '../Types/lessonsPlanEntry.type';
-import { getAllLessons } from '../Services/lessonsPlan.service';
 import { ErrorType } from '../Types/error.type';
+import { LessonsModel } from '../Models/lessonPlanEntry.model';
 
 export const getAllLessonsPlans: RequestHandler = async (
     req: Request,
     res: Response<LessonsPlanEntry[] | ErrorType>
 ) => {
     try {
-        const lessonsPlans = await getAllLessons();
+        const lessonsPlans = await LessonsModel.find();
 
         return res.status(200).json(lessonsPlans);
     } catch (error) {

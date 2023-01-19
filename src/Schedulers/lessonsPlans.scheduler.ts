@@ -1,29 +1,28 @@
-import {
-    getAllLessons,
-    updateAllLessons,
-} from '../Services/lessonsPlan.service';
 import { lessonPlansScrapper } from '../Services/lessonsPlansScrapper.service';
+import { LessonsModel } from '../Models/lessonPlanEntry.model';
 
-export const updateLessons = async () => {
+export const updateLessons = async (): Promise<void> => {
     try {
         const scrappedLessons = await lessonPlansScrapper();
 
         if ('status' in scrappedLessons) {
             console.log(scrappedLessons);
-        } else {
-            const savedLessons = await getAllLessons();
+            return;
+        }
 
-            if (
-                JSON.stringify(savedLessons) !== JSON.stringify(scrappedLessons)
-            ) {
-                const ifUpdated = await updateAllLessons(scrappedLessons);
+        const savedLessons = await LessonsModel.find();
 
-                ifUpdated
-                    ? console.log('Lessons updated')
-                    : console.log("Couldn't update lessons");
-            }
+        if (JSON.stringify(savedLessons) !== JSON.stringify(scrappedLessons)) {
+            LessonsModel.deleteMany();
+            LessonsModel.insertMany(scrappedLessons);
+
+            console.log('Lessons updated');
+
+            return;
         }
     } catch (error) {
         console.log(error);
+
+        return;
     }
 };
