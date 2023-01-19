@@ -1,7 +1,7 @@
 export const transformCSVField = (
     value: string,
     field: string
-): string | Array<string> => {
+): string | string[] => {
     const transformDay = (day: string) => {
         switch (day) {
             case 'Poniedziałek':

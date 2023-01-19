@@ -7,6 +7,7 @@ export const getAllLessonsPlans: RequestHandler = async (
     res: Response<LessonsPlanEntry[] | string>
 ) => {
     const lessonsPlans = await lessonPlansScrapper();
+
     if ('status' in lessonsPlans) {
         return res.status(lessonsPlans.status).send(lessonsPlans.message);
     }
