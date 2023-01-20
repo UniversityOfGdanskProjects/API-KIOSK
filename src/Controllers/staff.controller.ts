@@ -9,10 +9,11 @@ export const getAllStaff: RequestHandler = async (
     next: NextFunction
 ) => {
     try {
-        const staff = await StaffModel.find({}, { _id: 0, __v: 0 });
-        res.status(200).json(staff);
+        const staff = await StaffModel.find({}, { __v: 0 });
+
+        return res.status(200).json(staff);
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             status: 500,
             message: `There's an ${error}. Please try again.`,
         });
