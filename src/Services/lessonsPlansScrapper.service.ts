@@ -89,7 +89,7 @@ export const getDataFromCSV = async (
                 url.startsWith('fiz/') &&
                 !majorName.includes('bezpieczeństwo jądrowe')
             ) {
-                const [mainGroupName] = url.split('=');
+                const [, mainGroupName] = url.split('=');
 
                 return mapResult(result, mainGroupName);
             }
