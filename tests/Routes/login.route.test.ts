@@ -1,7 +1,7 @@
+import { stopScheduledJobs } from '../utils/stopScheduledJobs';
 import { connectToDB } from '../../src/Configs/db.config';
 import { UsersModel } from '../../src/Models/users.model';
 import { app, server } from '../../src/index';
-import schedule from 'node-schedule';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import bcrypt from 'bcrypt';
@@ -23,7 +23,7 @@ describe('Test of login route', () => {
         await UsersModel.deleteOne({ login: 'login_route' });
         await mongoose.disconnect();
 
-        schedule.scheduledJobs['lessonsPlanUpdate'].cancel();
+        stopScheduledJobs();
         server.close();
     });
 
