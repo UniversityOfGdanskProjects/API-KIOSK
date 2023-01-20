@@ -1,16 +1,21 @@
-import { lessonPlansScrapper } from '../Services/lessonsPlansScrapper.service';
 import { Request, RequestHandler, Response } from 'express';
-import { LessonsPlanEntry } from 'Types/lessonsPlanEntry.type';
+import { LessonsPlanEntry } from '../Types/lessonsPlanEntry.type';
+import { ErrorType } from '../Types/error.type';
+import { LessonsModel } from '../Models/lessonPlanEntry.model';
 
 export const getAllLessonsPlans: RequestHandler = async (
     req: Request,
-    res: Response<LessonsPlanEntry[] | string>
+    res: Response<LessonsPlanEntry[] | ErrorType>
 ) => {
-    const lessonsPlans = await lessonPlansScrapper();
+    try {
+        const lessonsPlans = await LessonsModel.find({}, { __v: 0 });
 
-    if ('status' in lessonsPlans) {
-        return res.status(lessonsPlans.status).send(lessonsPlans.message);
+        return res.status(200).json(lessonsPlans);
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            message:
+                'Something went wrong when retrieving lessons from database',
+        });
     }
-
-    return res.send(lessonsPlans);
 };
