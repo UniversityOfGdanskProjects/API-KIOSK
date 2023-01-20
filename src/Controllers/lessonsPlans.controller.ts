@@ -8,7 +8,7 @@ export const getAllLessonsPlans: RequestHandler = async (
     res: Response<LessonsPlanEntry[] | ErrorType>
 ) => {
     try {
-        const lessonsPlans = await LessonsModel.find({}, { __v: 0});
+        const lessonsPlans = await LessonsModel.find({}, { __v: 0 });
 
         return res.status(200).json(lessonsPlans);
     } catch (error) {
