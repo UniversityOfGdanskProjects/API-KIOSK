@@ -1,18 +1,22 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { staffScraper } from '../Services/staffScraper.service';
-import { Academic } from '../Types/staff.type';
+import { StaffModel } from '../Models/staff.model';
+import { Academic } from 'Types/staff.type';
 
 export const getAllStaff: RequestHandler = async (
     req: Request,
-    res: Response<Academic[] | string>,
+    res: Response<Academic[] | { message: string }>,
     next: NextFunction
 ) => {
-    const staff = await staffScraper();
+    try {
+        const staff = await StaffModel.find(
+            {},
+            { __v: 0, 'content.posts._id': 0 }
+        );
 
-    if ('status' in staff) {
-        res.status(staff.status).send(staff.message);
-        return;
+        return res.status(200).json(staff);
+    } catch (error) {
+        return res
+            .status(500)
+            .json({ message: `There's an ${error}. Please try again.` });
     }
-
-    res.send(staff);
 };
