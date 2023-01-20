@@ -3,12 +3,6 @@ import cheerio from 'cheerio';
 import { AcademicContent, Academic } from '../Types/staff.type';
 import { ErrorType } from '../Types/error.type';
 
-const removeDuplicates = async (arr: string[]) => {
-    return arr.filter((elem, index, self) => {
-        return index === self.indexOf(elem);
-    });
-};
-
 const facultyMemberScraper = async (
     url: string
 ): Promise<AcademicContent | null> => {
@@ -18,20 +12,31 @@ const facultyMemberScraper = async (
 
         const contact = $('.node-pracownik .group-pracownik-kontakt');
         const email = contact.find('.group-pracownik-kontakt .e-mail').text();
-        const postElements = $('.group-jednostka-stanowisko .term li a');
+        const postElements = $(
+            '.field-collection-view.clearfix.view-mode-full'
+        );
         const posts = await Promise.all(
             postElements.map(async (idx, post) => {
-                const name = $(post).text();
-                return name;
+                const position = $(post)
+                    .find('strong')
+                    .not(":contains('Źródło danych:')")
+                    .text();
+                const faculty = $(post)
+                    .find('a')
+                    .get()
+                    .reduce((acc: string[], el) => {
+                        acc.push($(el).text());
+                        return acc;
+                    }, []);
+                return { position, faculty };
             })
         );
-        const filteredPosts = await removeDuplicates(posts);
         const tutorial = $('#terminy_konsultacji p')
             .get()
             .reduce((acc, p) => (acc += $(p).text() + '\n'), '');
         const content = {
             email: email,
-            posts: filteredPosts,
+            posts: posts,
             tutorial: tutorial,
         } as AcademicContent;
         return content;

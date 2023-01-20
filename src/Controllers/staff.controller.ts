@@ -9,7 +9,10 @@ export const getAllStaff: RequestHandler = async (
     next: NextFunction
 ) => {
     try {
-        const staff = await StaffModel.find({}, { __v: 0 });
+        const staff = await StaffModel.find(
+            {},
+            { __v: 0, 'content.posts._id': 0 }
+        );
 
         return res.status(200).json(staff);
     } catch (error) {

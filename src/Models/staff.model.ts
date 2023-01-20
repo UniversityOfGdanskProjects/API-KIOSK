@@ -7,7 +7,18 @@ const StaffSchema = new mongoose.Schema<Academic>({
     units: [{ type: String }],
     content: {
         email: { type: String },
-        posts: [{ type: String }],
+        posts: [
+            {
+                position: {
+                    type: String,
+                },
+                faculty: [
+                    {
+                        type: String,
+                    },
+                ],
+            },
+        ],
         tutorial: { type: String },
     },
 });
