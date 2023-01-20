@@ -24,10 +24,8 @@ const facultyMemberScraper = async (
                 const faculty = $(post)
                     .find('a')
                     .get()
-                    .reduce((acc: string[], el) => {
-                        acc.push($(el).text());
-                        return acc;
-                    }, []);
+                    .map((el) => $(el).text());
+
                 return { position, faculty };
             })
         );
