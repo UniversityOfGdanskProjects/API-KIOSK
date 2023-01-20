@@ -7,7 +7,6 @@ import lessonsPlansRouter from './Routes/lessonsPlans.route';
 import staffRouter from './Routes/staff.route';
 import schedule from 'node-schedule';
 import { updateLessons } from './Schedulers/lessonsPlans.scheduler';
-import schedule from 'node-schedule';
 import { updateStaff } from './Schedulers/staffScheduler';
 
 const app: Express = express();
@@ -22,6 +21,9 @@ app.use(majorsRouter);
 app.use(loginRouter);
 app.use(lessonsPlansRouter);
 app.use(staffRouter);
+
+schedule.scheduleJob('lessonsPlanUpdate', '0 0 * * *', updateLessons);
+schedule.scheduleJob('staffUpdate', '0 0 * * *', updateStaff);
 
 const server = app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
