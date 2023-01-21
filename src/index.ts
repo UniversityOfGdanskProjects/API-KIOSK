@@ -30,5 +30,3 @@ const server = app.listen(port, () => {
 });
 
 export { app, server };
-
-// test of removing vercel config
