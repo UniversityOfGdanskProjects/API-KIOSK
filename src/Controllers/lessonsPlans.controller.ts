@@ -31,6 +31,7 @@ export const getAllLecturesForMajorYear: RequestHandler = async (
     try {
         const { major, year } = req.params;
 
+        // TODO: change mapping of groups in webscrapper and change for searching "type":"wykład" instead of "groups":"all"
         const lessonsPlans = await LessonsModel.find(
             {
                 name: major,
