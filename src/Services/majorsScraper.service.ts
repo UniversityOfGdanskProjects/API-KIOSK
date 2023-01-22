@@ -3,6 +3,7 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import { Major, MajorContent } from '../Types/major.type';
 import { parseHTMLInText } from '../utils/parseHTMLInText';
+import { fixMajorName } from '../utils/majorsScraper/fixMajorName';
 
 export interface ErrorType {
     status: number;
@@ -18,12 +19,14 @@ const prepareITURLs = async (): Promise<Partial<Major>[] | null[]> => {
         const $ = cheerio.load(data);
 
         const ITMajorsURLs = $('#block-ug-mfi-theme-menu-glowne > ul a')
-            .map((index, element): Partial<Major> | Partial<Major>[] => {
+            .map((index, element): Partial<Major> | Partial<Major>[] | null => {
                 const majorEndpoint = $(element).attr('href');
                 const majorName = $(element).text();
 
+                if (majorName === 'Tryb stacjonarny') return null;
+
                 return {
-                    name: majorName,
+                    name: fixMajorName(majorName),
                     url: 'https://mfi.ug.edu.pl' + majorEndpoint,
                 };
             })
