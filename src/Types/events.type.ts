@@ -1,4 +1,5 @@
 export interface EventsContent {
+    header: string;
     text: string[];
 }
 

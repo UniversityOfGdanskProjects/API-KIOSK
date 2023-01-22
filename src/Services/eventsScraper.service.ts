@@ -8,18 +8,20 @@ const eventsContent = async (url: string): Promise<EventsContent | null> => {
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
 
-        const wholeText = $('.node__content p');
+        const header = $('.title').text()
+        const description = $('.node__content p');        
         const lines = await Promise.all(
-            wholeText.map(async (idx, line) => {
-                const text = $(line).text();
-                return text;
+            description.map(async (idx, line) => {
+                const text = $(line).text().trim();
+                return text
             })
         );
-        const content = {
-            text: lines,
-        } as EventsContent;
+        const linesWithoutBlanks = lines.filter(text => text.length > 0)
 
-        return content;
+        return {
+            header: header,
+            text: linesWithoutBlanks
+        };
     } catch (error) {
         return null;
     }
@@ -34,7 +36,7 @@ export const eventsScraper = async (): Promise<Events[] | ErrorType> => {
         const events = await Promise.all(
             selectedElement
                 .map(async (i, element) => {
-                    const name = $(element).text().replace(/\n/g, '');
+                    const name = $(element).text().replace(/\n/g, '').trim();
                     const eventEndPoint = $(element)
                         .find('.node__title a')
                         .attr('href');
