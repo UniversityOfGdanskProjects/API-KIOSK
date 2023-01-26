@@ -1,27 +1,23 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-import { Events, EventsContent } from '../Types/events.type';
+import { Events } from '../Types/events.type';
 import { ErrorType } from '../Types/error.type';
 
-const eventsContent = async (url: string): Promise<EventsContent | null> => {
+const eventsContent = async (url: string): Promise<Array<string> | null> => {
     try {
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
 
-        const header = $('.title').text()
-        const description = $('.node__content p');        
+        const description = $('.node__content > div > div');
         const lines = await Promise.all(
-            description.map(async (idx, line) => {
-                const text = $(line).text().trim();
+            description.children().map(async (idx, line) => {
+                const text = $(line).text().replace(/\n/g, ' ').replace(/\t/g, '').trim();
                 return text
             })
         );
         const linesWithoutBlanks = lines.filter(text => text.length > 0)
 
-        return {
-            header: header,
-            text: linesWithoutBlanks
-        };
+        return linesWithoutBlanks
     } catch (error) {
         return null;
     }
@@ -44,7 +40,7 @@ export const eventsScraper = async (): Promise<Events[] | ErrorType> => {
 
                     return {
                         name: name,
-                        link: link,
+                        url: link,
                         content: await eventsContent(link),
                     } as Events;
                 })
