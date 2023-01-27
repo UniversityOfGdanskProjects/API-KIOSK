@@ -4,16 +4,27 @@ import { Academic } from 'Types/staff.type';
 import { createObjectCsvWriter } from 'csv-writer';
 import path from 'path';
 
-export const getAllStaff: RequestHandler = async (
-    req: Request,
+export const getStaff = async (
+    req: Request<{}, {}, {}, { page: number }>,
     res: Response<Academic[] | { message: string }>,
     next: NextFunction
 ) => {
     try {
+        const { page } = req.query;
         const staff = await StaffModel.find(
             {},
             { __v: 0, 'content.posts._id': 0 }
-        );
+        )
+            .skip((page - 1) * 30)
+            .limit(30);
+
+        const totalRecords = await StaffModel.countDocuments();
+        const totalPages = Math.ceil(totalRecords / 30);
+
+        res.setHeader('X-Total-Pages', totalPages);
+
+        if (totalPages <= page) res.setHeader('X-More-Pages', 'false');
+        else res.setHeader('X-More-Pages', 'true');
 
         return res.status(200).json(staff);
     } catch (error) {
@@ -43,7 +54,7 @@ export const getStaffById: RequestHandler = async (
 };
 
 export const searchStaffByName: RequestHandler = async (
-    req: Request,
+    req: Request<any, any, { name: string }>,
     res: Response<Academic[] | { message: string }>,
     next: NextFunction
 ) => {

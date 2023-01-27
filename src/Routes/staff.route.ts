@@ -1,5 +1,5 @@
 import {
-    getAllStaff,
+    getStaff,
     getStaffById,
     searchStaffByName,
     getUnitsInfo,
@@ -10,7 +10,7 @@ import { Router } from 'express';
 
 const staffRouter = Router();
 
-staffRouter.get('/staff', getAllStaff);
+staffRouter.get('/staff', getStaff);
 staffRouter.get('/staff/search', searchStaffByName);
 staffRouter.get('/staff/csv', getStaffCsv);
 staffRouter.get('/staff/units', getUnitsInfo);
