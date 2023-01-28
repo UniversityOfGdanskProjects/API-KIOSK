@@ -55,6 +55,9 @@ const majorScraper = async (
             .children()
             .map((index, element) => {
                 const elementHTML = $(element).html();
+                const elementText = $(element).text();
+
+                if (parseHTMLInText(elementText) === '') return;
 
                 if (element.tagName == 'style' || element.name == 'style')
                     return;
@@ -68,7 +71,7 @@ const majorScraper = async (
 
                 return {
                     element: element.tagName || element.name,
-                    text: parseHTMLInText($(element).text()),
+                    text: elementText,
                 } as MajorContent;
             })
             .get();
