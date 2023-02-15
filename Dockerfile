@@ -8,4 +8,4 @@ WORKDIR /app
 COPY --from=builder package.json yarn.lock /app/
 COPY --from=builder dist/src/ /app/dist/
 RUN yarn install --production=true
-ENTRYPOINT [ "sh" ]
+ENTRYPOINT [ "yarn", "start" ]
