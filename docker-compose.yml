@@ -1,17 +1,17 @@
-version: '3.7'
+version: '3.9'
 
 services:
     api-kiosk:
-        image: api-kiosk
+        image: node:18-alpine
         container_name: api-kiosk
-        build:
-            context: .
-            dockerfile: Dockerfile
-            target: dev
-        entrypoint: yarn dev --host 0.0.0.0
+        build: .
+        command: sh ./entrypoint.sh
+        working_dir: /app
         volumes:
-            - ./src:/app/src
+            - ./:/app
         ports:
             - 3001:3001
+        env_file:
+            - ./.env
         environment:
             - MONGO_PATH=kiosk.c32e0lo.mongodb.net
