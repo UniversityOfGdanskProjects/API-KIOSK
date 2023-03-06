@@ -28,7 +28,7 @@ jobs:
               run: yarn prettier:ci
 
             - name: unit tests
-              run: yarn test:unit
+              run: yarn test:unit:ci
 
             - name: coverage tests
               env:
@@ -36,7 +36,7 @@ jobs:
                   MONGO_PATH: ${{ secrets.MONGO_PATH }}
                   MONGO_USER: ${{ secrets.MONGO_USER }}
                   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
-              run: yarn test:coverage
+              run: yarn test:coverage:ci
 
             - name: build
               run: yarn build
