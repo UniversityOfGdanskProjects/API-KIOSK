@@ -4,11 +4,13 @@
     "scripts": {
         "start": "NODE_ENV=production node dist/index.js",
         "dev": "nodemon",
-        "up": "docker-compose up",
+        "up": "docker compose up",
         "build": "tsc",
-        "test:unit": "jest --testPathPattern=src/utils",
-        "test:coverage": "jest --coverage --testPathPattern=tests/",
-        "prettier:ci": "npx prettier --list-different ."
+        "test:unit:ci": "jest --testPathPattern=src/utils",
+        "test:coverage:ci": "jest --coverage --testPathPattern=tests/",
+        "prettier:ci": "npx prettier --list-different .",
+        "test:unit": "docker compose run --rm api-kiosk yarn test:unit:ci",
+        "test:coverage": "docker compose run --rm api-kiosk yarn test:coverage:ci"
     },
     "nodemonConfig": {
         "watch": [
