@@ -16,3 +16,4 @@ services:
         environment:
             - MONGO_PATH=kiosk.c32e0lo.mongodb.net
             - PORT=3001
+            - DB_NAME=KioskDB
