@@ -23,11 +23,11 @@ This app uses [Jest](https://jestjs.io/) for both unit and coverage testing.
 
 ### CI & CD
 
-CI pipeline runs on every pull request to any branch, while CD runs on every merge to `master` branch.
+CI pipeline runs on every pull request to any branch, while CD runs on every merge to `main` branch.
 
 ### Production site
 
-You can check the deployment site [here]().
+You can check the deployment for [development](https://api-kiosk-dev.onrender.com) and for [production](https://api-kiosk-prod.onrender.com).
 
 ---
 
