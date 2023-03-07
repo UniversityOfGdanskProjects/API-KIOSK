@@ -6,6 +6,6 @@ RUN yarn build
 FROM node:18-alpine
 WORKDIR /app
 COPY --from=builder package.json yarn.lock /app/
-COPY --from=builder dist/src/ /app/dist/
 RUN yarn install --production=true
+COPY --from=builder dist/src/ /app/dist/
 ENTRYPOINT [ "yarn", "start" ]
