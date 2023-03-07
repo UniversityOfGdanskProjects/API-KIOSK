@@ -8,7 +8,7 @@ export const connectToDB = async (): Promise<void> => {
 
     const mongoUri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_PATH}`;
 
-    const dbName = process.env.DB;
+    const dbName = process.env.DB_NAME;
 
     try {
         await mongoose.connect(`${mongoUri}/${dbName}?retryWrites=true`);
