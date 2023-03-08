@@ -4,29 +4,32 @@ import { Academic } from 'Types/staff.type';
 import { createObjectCsvWriter } from 'csv-writer';
 import path from 'path';
 
+interface Pagination<T> {
+    content: T[];
+    page: number;
+    totalPages: number;
+}
+
 export const getStaff = async (
-    req: Request<{}, {}, {}, { page: number }>,
-    res: Response<Academic[] | { message: string }>,
+    req: Request<{}, {}, {}, { page: string; name: string }>,
+    res: Response<Pagination<Academic> | { message: string }>,
     next: NextFunction
 ) => {
     try {
-        const { page } = req.query;
+        const { page, name } = req.query;
+        const pageNumber = page ? parseInt(page, 10) : 1;
         const staff = await StaffModel.find(
-            {},
+            { name: { $regex: name, $options: 'i' } },
             { __v: 0, 'content.posts._id': 0 }
         )
-            .skip((page - 1) * 30)
+            .skip((pageNumber - 1) * 30)
             .limit(30);
 
         const totalRecords = await StaffModel.countDocuments();
         const totalPages = Math.ceil(totalRecords / 30);
-
-        res.setHeader('X-Total-Pages', totalPages);
-
-        if (totalPages <= page) res.setHeader('X-More-Pages', 'false');
-        else res.setHeader('X-More-Pages', 'true');
-
-        return res.status(200).json(staff);
+        return res
+            .status(200)
+            .json({ content: staff, page: pageNumber, totalPages });
     } catch (error) {
         return res
             .status(500)
