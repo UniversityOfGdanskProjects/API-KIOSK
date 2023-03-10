@@ -25,7 +25,7 @@ export const getNewsDetail: RequestHandler = async (
     try {
         const { id } = req.params;
 
-        const singleNews = await NewsModel.findById(id);
+        const singleNews = await NewsModel.findOne({ _id: id });
 
         if (!singleNews) {
             return res

@@ -22,7 +22,7 @@ export const newsScraperMFI = async (): Promise<News[] | null> => {
         ];
         const newsMFIArray: News[][] = await Promise.all(
             mfiNewsSites.map(async (site) => {
-                return await getNewsInSectionsMFI(site);
+                return await getNewsInCategoriessMFI(site);
             })
         );
 
@@ -32,7 +32,7 @@ export const newsScraperMFI = async (): Promise<News[] | null> => {
     }
 };
 
-const getNewsInSectionsMFI = async (site: string) => {
+const getNewsInCategoriessMFI = async (site: string) => {
     const HTMLDataRequest = await axios.get(
         `https://mfi.ug.edu.pl/wydzial/${site}`
     );
@@ -79,7 +79,7 @@ export const newsScraperINF = async (): Promise<News[] | null> => {
         const infNewsSites = ['news', 'studinfo'];
         const newsINFArray: News[][] = await Promise.all(
             infNewsSites.map(async (site) => {
-                return await getNewsInSectionsINF(site);
+                return await getNewsInCategoriesINF(site);
             })
         );
         return newsINFArray.flat();
@@ -88,7 +88,7 @@ export const newsScraperINF = async (): Promise<News[] | null> => {
     }
 };
 
-const getNewsInSectionsINF = async (site: string) => {
+const getNewsInCategoriesINF = async (site: string) => {
     const HTMLDataRequest = await axios.get(`https://inf.ug.edu.pl/${site}`, {
         headers: {
             'Accept-Encoding': 'application/json',
