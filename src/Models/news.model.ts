@@ -18,14 +18,18 @@ const NewsSchema = new mongoose.Schema<News>({
         type: String,
         required: true,
     },
-    shortBody: {
-        type: String,
-        required: false,
-    },
-    body: {
-        type: String,
-        required: true,
-    },
+    shortBody: [
+        {
+            type: String,
+            required: false,
+        },
+    ],
+    body: [
+        {
+            type: String,
+            required: true,
+        },
+    ],
     site: {
         type: String,
         required: true,

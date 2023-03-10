@@ -3,8 +3,8 @@ export interface News {
     link: string;
     datetime: string;
     title: string;
-    shortBody: string;
-    body: string;
+    shortBody: string[];
+    body: string[];
     site: string;
     category: string;
 }

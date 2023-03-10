@@ -2,8 +2,8 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import { News } from '../Types/News.type';
 import { reformatDate } from '../utils/newsScraper/fixDate';
-import { parseHTMLInText } from '../utils/parseHTMLInText';
 import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
+import { splitByLines } from '../utils/newsScraper/splitByLines';
 
 const getBody = async (link: string, element: string): Promise<string> => {
     const HTMLDataRequest = await axios.get(link);
@@ -54,13 +54,15 @@ const getNewsInSectionsMFI = async (site: string) => {
                     'https://mfi.ug.edu.pl/' + href,
                     '.node__content > div:nth-child(2) > div:nth-child(1)'
                 );
+                let shortDescription = removeSeeMore(body);
+
                 const newsDetail = {
                     photo: 'https://mfi.ug.edu.pl' + img,
                     link: 'https://mfi.ug.edu.pl' + href,
                     datetime: datetime,
                     title: title,
-                    shortBody: removeSeeMore(body),
-                    body: parseHTMLInText(longBody),
+                    shortBody: splitByLines(shortDescription),
+                    body: splitByLines(longBody),
                     site: 'MFI',
                     category: $('h1.title').text(),
                 };
@@ -115,8 +117,8 @@ const getNewsInSectionsINF = async (site: string) => {
                     link: 'https://inf.ug.edu.pl/' + href,
                     datetime: reformatDate(datetime),
                     title: title,
-                    shortBody: body,
-                    body: parseHTMLInText(longBody),
+                    shortBody: splitByLines(body),
+                    body: splitByLines(longBody),
                     site: 'INF',
                     category: $('div.artHeader').text(),
                 };
