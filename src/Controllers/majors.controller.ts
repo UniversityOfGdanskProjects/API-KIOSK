@@ -20,19 +20,19 @@ export const getAllMajors: RequestHandler = async (
 
 export const getMajor: RequestHandler = async (
     req: Request,
-    res: Response<{ major: Major } | { message: string }>,
+    res: Response<Major | { message: string }>,
     next: NextFunction
 ) => {
     try {
         const { id } = req.params;
 
-        const major = await MajorModel.findOne({ _id: id });
+        const major = await MajorModel.findOne({ _id: id }, { __v: 0 });
 
         if (!major) {
             return res.status(404).json({ message: 'Could not find major' });
         }
 
-        return res.json({ major: major });
+        return res.json(major);
     } catch (error) {
         return res.status(500).json({
             message: 'Something went wrong',
