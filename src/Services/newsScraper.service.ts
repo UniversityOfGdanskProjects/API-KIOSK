@@ -2,6 +2,8 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import { News } from '../Types/News.type';
 import { reformatDate } from '../utils/newsScraper/fixDate';
+import { parseHTMLInText } from '../utils/parseHTMLInText';
+import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
 
 const getBody = async (link: string, element: string): Promise<string> => {
     const HTMLDataRequest = await axios.get(link);
@@ -57,8 +59,8 @@ const getNewsInSectionsMFI = async (site: string) => {
                     link: 'https://mfi.ug.edu.pl' + href,
                     datetime: datetime,
                     title: title,
-                    shortBody: body,
-                    body: longBody,
+                    shortBody: removeSeeMore(body),
+                    body: parseHTMLInText(longBody),
                     site: 'MFI',
                     category: $('h1.title').text(),
                 };
@@ -114,7 +116,7 @@ const getNewsInSectionsINF = async (site: string) => {
                     datetime: reformatDate(datetime),
                     title: title,
                     shortBody: body,
-                    body: longBody,
+                    body: parseHTMLInText(longBody),
                     site: 'INF',
                     category: $('div.artHeader').text(),
                 };
