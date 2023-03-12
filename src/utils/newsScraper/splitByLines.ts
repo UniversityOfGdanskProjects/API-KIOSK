@@ -1,8 +1,6 @@
 import { parseHTMLInText } from '../parseHTMLInText';
 export const splitByLines = (text: string): string[] => {
-    let newText = text.trim().split(/\r?\n+/);
-    let parsedText = newText.map((line) => {
-        return parseHTMLInText(line);
-    });
+    const newText = text.trim().split(/\r?\n+/);
+    const parsedText = newText.map((line) => parseHTMLInText(line));
     return parsedText;
 };

@@ -4,7 +4,7 @@ import { News } from '../Types/News.type';
 import { reformatDate } from '../utils/newsScraper/fixDate';
 import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
 import { splitByLines } from '../utils/newsScraper/splitByLines';
-import { returnCategoryEnum } from '../utils/newsScraper/returnCategoryEnum';
+import { mapNewsCategory } from '../utils/newsScraper/returnCategoryEnum';
 
 const getBody = async (link: string, element: string): Promise<string> => {
     const HTMLDataRequest = await axios.get(link);
@@ -16,21 +16,21 @@ const getBody = async (link: string, element: string): Promise<string> => {
 };
 
 export const newsScraperMFI = async (): Promise<News[] | null> => {
-    try {
-        const mfiNewsSites = [
-            'aktualnosci',
-            'aktualnosci/archiwum-aktualnosci',
-        ];
-        const newsMFIArray: News[][] = await Promise.all(
-            mfiNewsSites.map(async (site) => {
-                return await getNewsInCategoriessMFI(site);
-            })
-        );
+    const mfiNewsSites = ['aktualnosci', 'aktualnosci/archiwum-aktualnosci'];
+    const newsMFIPromises = (await Promise.allSettled(
+        mfiNewsSites.map(async (site) => {
+            return await getNewsInCategoriessMFI(site);
+        })
+    )) as { status: 'fulfilled' | 'rejected'; value: News[] }[];
+    const resolvedNewsMFIPromises = newsMFIPromises.filter(
+        ({ status }) => status === 'fulfilled'
+    );
+    const newsMFIResponses = resolvedNewsMFIPromises.map(
+        (promise) => promise.value
+    );
+    //TODO: error handling rejected promises
 
-        return newsMFIArray.flat();
-    } catch (err) {
-        return null;
-    }
+    return newsMFIResponses.flat();
 };
 
 const getNewsInCategoriessMFI = async (site: string) => {
@@ -64,8 +64,8 @@ const getNewsInCategoriessMFI = async (site: string) => {
                     title: title,
                     shortBody: splitByLines(shortDescription),
                     body: splitByLines(longBody),
-                    site: 'MFI',
-                    category: returnCategoryEnum($('h1.title').text()),
+                    source: 'MFI',
+                    category: mapNewsCategory($('h1.title').text()),
                 };
 
                 return newsDetail;
@@ -76,17 +76,21 @@ const getNewsInCategoriessMFI = async (site: string) => {
 };
 
 export const newsScraperINF = async (): Promise<News[] | null> => {
-    try {
-        const infNewsSites = ['news', 'studinfo'];
-        const newsINFArray: News[][] = await Promise.all(
-            infNewsSites.map(async (site) => {
-                return await getNewsInCategoriesINF(site);
-            })
-        );
-        return newsINFArray.flat();
-    } catch (err) {
-        return null;
-    }
+    const infNewsSites = ['news', 'studinfo'];
+    const newsINFPromises = (await Promise.allSettled(
+        infNewsSites.map(async (site) => {
+            return await getNewsInCategoriesINF(site);
+        })
+    )) as { status: 'fulfilled' | 'rejected'; value: News[] }[];
+    const resolvedNewsINFPromises = newsINFPromises.filter(
+        ({ status }) => status === 'fulfilled'
+    );
+    const newsINFResponses = resolvedNewsINFPromises.map(
+        (promise) => promise.value
+    );
+    //TODO: error handling rejected promises
+
+    return newsINFResponses.flat();
 };
 
 const getNewsInCategoriesINF = async (site: string) => {
@@ -120,8 +124,8 @@ const getNewsInCategoriesINF = async (site: string) => {
                     title: title,
                     shortBody: splitByLines(body),
                     body: splitByLines(longBody),
-                    site: 'INF',
-                    category: returnCategoryEnum($('div.artHeader').text()),
+                    source: 'INF',
+                    category: mapNewsCategory($('div.artHeader').text()),
                 };
                 return newsDetail;
             })

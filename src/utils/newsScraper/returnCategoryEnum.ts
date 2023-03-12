@@ -1,14 +1,14 @@
-import { NewsCategoryEnum } from '../../Types/News.type';
-export const returnCategoryEnum = (category: string): NewsCategoryEnum => {
+import { NewsCategory } from '../../Types/News.type';
+export const mapNewsCategory = (category: string): NewsCategory => {
     switch (category) {
         case 'Wydarzenia':
         case 'Aktualności':
-            return NewsCategoryEnum.NEWS;
+            return NewsCategory.NEWS;
         case 'Dla studentów':
-            return NewsCategoryEnum.STUDENTS;
+            return NewsCategory.STUDENTS;
         case 'Archiwum aktualności':
-            return NewsCategoryEnum.ARCHIVE;
+            return NewsCategory.ARCHIVE;
         default:
-            return NewsCategoryEnum.NEWS;
+            return NewsCategory.NEWS;
     }
 };

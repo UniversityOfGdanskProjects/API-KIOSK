@@ -5,11 +5,11 @@ export interface News {
     title: string;
     shortBody: string[];
     body: string[];
-    site: string;
-    category: NewsCategoryEnum;
+    source: string;
+    category: NewsCategory;
 }
 
-export enum NewsCategoryEnum {
+export enum NewsCategory {
     NEWS = 'NEWS',
     STUDENTS = 'STUDENTS',
     ARCHIVE = 'ARCHIVE',

@@ -8,7 +8,7 @@ export const getAllNews: RequestHandler = async (
     res: Response<News[] | Partial<ErrorType>>
 ) => {
     try {
-        const news = await NewsModel.find({});
+        const news = await NewsModel.find({}, { __v: 0 });
 
         return res.json(news);
     } catch (error) {
@@ -20,12 +20,12 @@ export const getAllNews: RequestHandler = async (
 
 export const getNewsDetail: RequestHandler = async (
     req: Request,
-    res: Response
+    res: Response<News | { message: string }>
 ) => {
     try {
         const { id } = req.params;
 
-        const singleNews = await NewsModel.findOne({ _id: id });
+        const singleNews = await NewsModel.findOne({ _id: id }, { __v: 0 });
 
         if (!singleNews) {
             return res
@@ -33,7 +33,7 @@ export const getNewsDetail: RequestHandler = async (
                 .json({ message: 'This news does not exist' });
         }
 
-        return res.json({ singleNews: singleNews });
+        return res.json(singleNews);
     } catch (error) {
         return res.status(500).json({
             message: 'Something went wrong',

@@ -1,25 +1,25 @@
-import { returnCategoryEnum } from './returnCategoryEnum';
-import { NewsCategoryEnum } from '../../Types/News.type';
+import { mapNewsCategory } from './returnCategoryEnum';
+import { NewsCategory } from '../../Types/News.type';
 
 describe('returnCategoryEnum', () => {
     it('returns NEWS', () => {
         const category = 'Wydarzenia';
-        expect(returnCategoryEnum(category)).toEqual(NewsCategoryEnum.NEWS);
+        expect(mapNewsCategory(category)).toEqual(NewsCategory.NEWS);
     });
     it('returns NEWS', () => {
         const category = 'Aktualności';
-        expect(returnCategoryEnum(category)).toEqual(NewsCategoryEnum.NEWS);
+        expect(mapNewsCategory(category)).toEqual(NewsCategory.NEWS);
     });
     it('returns NEWS', () => {
         const category = 'category';
-        expect(returnCategoryEnum(category)).toEqual(NewsCategoryEnum.NEWS);
+        expect(mapNewsCategory(category)).toEqual(NewsCategory.NEWS);
     });
     it('returns STUDENTS', () => {
         const category = 'Dla studentów';
-        expect(returnCategoryEnum(category)).toEqual(NewsCategoryEnum.STUDENTS);
+        expect(mapNewsCategory(category)).toEqual(NewsCategory.STUDENTS);
     });
     it('returns ARCHIVE', () => {
         const category = 'Archiwum aktualności';
-        expect(returnCategoryEnum(category)).toEqual(NewsCategoryEnum.ARCHIVE);
+        expect(mapNewsCategory(category)).toEqual(NewsCategory.ARCHIVE);
     });
 });
