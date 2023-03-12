@@ -4,6 +4,7 @@ import { News } from '../Types/News.type';
 import { reformatDate } from '../utils/newsScraper/fixDate';
 import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
 import { splitByLines } from '../utils/newsScraper/splitByLines';
+import { returnCategoryEnum } from '../utils/newsScraper/returnCategoryEnum';
 
 const getBody = async (link: string, element: string): Promise<string> => {
     const HTMLDataRequest = await axios.get(link);
@@ -64,7 +65,7 @@ const getNewsInCategoriessMFI = async (site: string) => {
                     shortBody: splitByLines(shortDescription),
                     body: splitByLines(longBody),
                     site: 'MFI',
-                    category: $('h1.title').text(),
+                    category: returnCategoryEnum($('h1.title').text()),
                 };
 
                 return newsDetail;
@@ -120,7 +121,7 @@ const getNewsInCategoriesINF = async (site: string) => {
                     shortBody: splitByLines(body),
                     body: splitByLines(longBody),
                     site: 'INF',
-                    category: $('div.artHeader').text(),
+                    category: returnCategoryEnum($('div.artHeader').text()),
                 };
                 return newsDetail;
             })

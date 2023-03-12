@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { News } from 'Types/News.type';
+import { News, NewsCategoryEnum } from '../Types/News.type';
 
 const NewsSchema = new mongoose.Schema<News>({
     photo: {
@@ -36,6 +36,7 @@ const NewsSchema = new mongoose.Schema<News>({
     },
     category: {
         type: String,
+        enum: NewsCategoryEnum,
         required: true,
     },
 });
