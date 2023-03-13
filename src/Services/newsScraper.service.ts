@@ -58,7 +58,7 @@ const getNewsInCategoriessMFI = async (
                     'https://mfi.ug.edu.pl/' + href,
                     '.node__content > div:nth-child(2) > div:nth-child(1)'
                 );
-                let shortDescription = removeSeeMore(body);
+                const shortDescription = removeSeeMore(body);
 
                 const newsDetail: News = {
                     photo: 'https://mfi.ug.edu.pl' + img,
