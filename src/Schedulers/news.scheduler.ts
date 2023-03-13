@@ -12,7 +12,6 @@ export const updateNews = async () => {
         await NewsModel.deleteMany({});
         await NewsModel.insertMany(newsINF);
         await NewsModel.insertMany(newsMFI);
-        console.log('News updated');
     } catch (error) {
         console.log(error);
     }

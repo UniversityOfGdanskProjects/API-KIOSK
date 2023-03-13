@@ -5,6 +5,7 @@ import { reformatDate } from '../utils/newsScraper/fixDate';
 import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
 import { splitByLines } from '../utils/newsScraper/splitByLines';
 import { mapNewsCategory } from '../utils/newsScraper/returnCategoryEnum';
+import { ErrorType } from 'Types/error.type';
 
 const getBody = async (link: string, element: string): Promise<string> => {
     const HTMLDataRequest = await axios.get(link);
@@ -33,7 +34,9 @@ export const newsScraperMFI = async (): Promise<News[] | null> => {
     return newsMFIResponses.flat();
 };
 
-const getNewsInCategoriessMFI = async (site: string) => {
+const getNewsInCategoriessMFI = async (
+    site: string
+): Promise<News[] | ErrorType> => {
     const HTMLDataRequest = await axios.get(
         `https://mfi.ug.edu.pl/wydzial/${site}`
     );
@@ -57,7 +60,7 @@ const getNewsInCategoriessMFI = async (site: string) => {
                 );
                 let shortDescription = removeSeeMore(body);
 
-                const newsDetail = {
+                const newsDetail: News = {
                     photo: 'https://mfi.ug.edu.pl' + img,
                     link: 'https://mfi.ug.edu.pl' + href,
                     datetime: datetime,
@@ -76,12 +79,13 @@ const getNewsInCategoriessMFI = async (site: string) => {
 };
 
 export const newsScraperINF = async (): Promise<News[] | null> => {
-    const infNewsSites = ['news', 'studinfo'];
+    const infNewsSites = ['newsssss', 'studinfo'];
     const newsINFPromises = (await Promise.allSettled(
         infNewsSites.map(async (site) => {
             return await getNewsInCategoriesINF(site);
         })
     )) as { status: 'fulfilled' | 'rejected'; value: News[] }[];
+
     const resolvedNewsINFPromises = newsINFPromises.filter(
         ({ status }) => status === 'fulfilled'
     );
@@ -93,7 +97,9 @@ export const newsScraperINF = async (): Promise<News[] | null> => {
     return newsINFResponses.flat();
 };
 
-const getNewsInCategoriesINF = async (site: string) => {
+const getNewsInCategoriesINF = async (
+    site: string
+): Promise<News[] | ErrorType> => {
     const HTMLDataRequest = await axios.get(`https://inf.ug.edu.pl/${site}`, {
         headers: {
             'Accept-Encoding': 'application/json',
@@ -117,7 +123,7 @@ const getNewsInCategoriesINF = async (site: string) => {
                     'https://inf.ug.edu.pl/' + href,
                     '.artBody'
                 );
-                const newsDetail = {
+                const newsDetail: News = {
                     photo: 'https://inf.ug.edu.pl/' + img,
                     link: 'https://inf.ug.edu.pl/' + href,
                     datetime: reformatDate(datetime),
