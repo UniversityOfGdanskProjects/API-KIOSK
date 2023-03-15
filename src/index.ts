@@ -13,7 +13,7 @@ connectToDB();
 schedule.scheduleJob('lessonsPlanUpdate', '0 0 * * *', updateLessons);
 schedule.scheduleJob('staffUpdate', '0 0 * * *', updateStaff);
 schedule.scheduleJob('majorsUpdate', '0 0 * * *', updateMajors);
-schedule.scheduleJob('newsUpdate', '* * * * *', updateNews);
+schedule.scheduleJob('newsUpdate', '0 0 * * *', updateNews);
 
 const server = app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);

@@ -3,7 +3,7 @@ import { NewsModel } from '../Models/news.model';
 import { ErrorType } from '../Types/error.type';
 import { News } from '../Types/News.type';
 
-export const getAllNews: RequestHandler = async (
+export const getAllNews = async (
     req: Request,
     res: Response<News[] | Partial<ErrorType>>
 ) => {
@@ -18,8 +18,8 @@ export const getAllNews: RequestHandler = async (
     }
 };
 
-export const getNewsDetail: RequestHandler = async (
-    req: Request,
+export const getNewsDetail = async (
+    req: Request<{ id: string }, {}, {}, {}, {}>,
     res: Response<News | { message: string }>
 ) => {
     try {
