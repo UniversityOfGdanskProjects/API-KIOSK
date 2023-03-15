@@ -5,7 +5,7 @@ export interface News {
     title: string;
     shortBody: string[];
     body: string[];
-    source: string;
+    source: NewsSource;
     category: NewsCategory;
 }
 
@@ -13,4 +13,9 @@ export enum NewsCategory {
     NEWS = 'NEWS',
     STUDENTS = 'STUDENTS',
     ARCHIVE = 'ARCHIVE',
+}
+
+export enum NewsSource {
+    INF = 'INF',
+    MFI = 'MFI',
 }

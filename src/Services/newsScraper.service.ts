@@ -1,6 +1,6 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-import { News } from '../Types/News.type';
+import { News, NewsSource } from '../Types/News.type';
 import { reformatDate } from '../utils/newsScraper/fixDate';
 import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
 import { splitByLines } from '../utils/newsScraper/splitByLines';
@@ -67,7 +67,7 @@ const getNewsInCategoriessMFI = async (
                     title: title,
                     shortBody: splitByLines(shortDescription),
                     body: splitByLines(longBody),
-                    source: 'MFI',
+                    source: NewsSource.MFI,
                     category: mapNewsCategory($('h1.title').text()),
                 };
 
@@ -130,7 +130,7 @@ const getNewsInCategoriesINF = async (
                     title: title,
                     shortBody: splitByLines(body),
                     body: splitByLines(longBody),
-                    source: 'INF',
+                    source: NewsSource.INF,
                     category: mapNewsCategory($('div.artHeader').text()),
                 };
                 return newsDetail;
