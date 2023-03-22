@@ -12,15 +12,21 @@ const eventsContent = async (url: string): Promise<Array<string> | null> => {
         const description = $('.node__content > div > div');
         const lines = await Promise.all(
             description.children().map(async (idx, line) => {
-                const text = $(line).text().replace(/\n/g, ' ').replace(/\t/g, '').trim();
-                return text
+                const text = $(line)
+                    .text()
+                    .replace(/\n/g, ' ')
+                    .replace(/\t/g, '')
+                    .trim();
+                return text;
             })
         );
-        const linesWithoutBlanks = (lines.filter(text => text.length > 0 && text !== "wydarzenia"))
+        const linesWithoutBlanks = lines.filter(
+            (text) => text.length > 0 && text !== 'wydarzenia'
+        );
 
         const result = await Promise.all(
             linesWithoutBlanks.map(async (text) => {
-                return text + " " + "\r\n"
+                return text + ' ' + '\r\n';
             })
         );
 
