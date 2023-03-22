@@ -4,6 +4,7 @@ import { updateStaff } from './Schedulers/staffScheduler';
 import { connectToDB } from './Configs/db.config';
 import schedule from 'node-schedule';
 import { app } from './app';
+import { updateEvents } from './Schedulers/events.scheduler';
 
 const PORT = process.env.PORT;
 
@@ -12,6 +13,7 @@ connectToDB();
 schedule.scheduleJob('lessonsPlanUpdate', '0 0 * * *', updateLessons);
 schedule.scheduleJob('staffUpdate', '0 0 * * *', updateStaff);
 schedule.scheduleJob('majorsUpdate', '0 0 * * *', updateMajors);
+schedule.scheduleJob('eventsUpdate', '0 0 * * *', updateEvents);
 
 const server = app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
