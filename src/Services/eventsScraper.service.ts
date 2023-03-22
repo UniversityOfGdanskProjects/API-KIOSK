@@ -2,6 +2,7 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import { Events } from '../Types/events.type';
 import { ErrorType } from '../Types/error.type';
+import { text } from 'body-parser';
 
 const eventsContent = async (url: string): Promise<Array<string> | null> => {
     try {
@@ -15,9 +16,17 @@ const eventsContent = async (url: string): Promise<Array<string> | null> => {
                 return text
             })
         );
-        const linesWithoutBlanks = lines.filter(text => text.length > 0)
+        const linesWithoutBlanks = (lines.filter(text => text.length > 0 && text !== "wydarzenia"))
 
-        return linesWithoutBlanks
+        const result = await Promise.all(
+            linesWithoutBlanks.map(async (text) => {
+                return text + " " + "\r\n"
+            })
+        );
+
+        // const helper = linesWithoutBlanks.filter((text) => text !== "wydarzenia")
+
+        return result;
     } catch (error) {
         return null;
     }
