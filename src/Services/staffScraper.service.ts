@@ -12,11 +12,21 @@ const facultyMemberScraper = async (
 
         const contact = $('.node-pracownik .group-pracownik-kontakt');
         const email = contact.find('.group-pracownik-kontakt .e-mail').text();
-        const postElements = $('.group-jednostka-stanowisko .term li a');
+        const postElements = $(
+            '.field-collection-view.clearfix.view-mode-full'
+        );
         const posts = await Promise.all(
             postElements.map(async (idx, post) => {
-                const name = $(post).text();
-                return name;
+                const position = $(post)
+                    .find('strong')
+                    .not(":contains('Źródło danych:')")
+                    .text();
+                const faculty = $(post)
+                    .find('a')
+                    .get()
+                    .map((el) => $(el).text());
+
+                return { position, faculty };
             })
         );
         const tutorial = $('#terminy_konsultacji p')

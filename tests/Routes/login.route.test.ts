@@ -1,6 +1,8 @@
+import { stopScheduledJobs } from '../utils/stopScheduledJobs';
 import { connectToDB } from '../../src/Configs/db.config';
 import { UsersModel } from '../../src/Models/users.model';
-import { app, server } from '../../src/index';
+import { server } from '../../src/index';
+import { app } from '../../src/app';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import bcrypt from 'bcrypt';
@@ -22,6 +24,7 @@ describe('Test of login route', () => {
         await UsersModel.deleteOne({ login: 'login_route' });
         await mongoose.disconnect();
 
+        stopScheduledJobs();
         server.close();
     });
 

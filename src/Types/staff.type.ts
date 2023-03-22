@@ -1,6 +1,6 @@
 export interface AcademicContent {
     email: string;
-    posts: string[];
+    posts: { position: string; faculty: string[] }[];
     tutorial: string;
 }
 
