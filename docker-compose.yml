@@ -4,7 +4,6 @@ services:
     api-kiosk:
         image: node:18-alpine
         container_name: api-kiosk
-        build: .
         command: sh ./entrypoint.sh
         working_dir: /app
         volumes:
