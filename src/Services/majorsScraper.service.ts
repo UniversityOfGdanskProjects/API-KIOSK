@@ -4,6 +4,7 @@ import cheerio from 'cheerio';
 import { Major, MajorContent } from '../Types/major.type';
 import { parseHTMLInText } from '../utils/parseHTMLInText';
 import { fixMajorName } from '../utils/majorsScraper/fixMajorName';
+import { returnScraperError } from '../utils/errorScraper';
 
 export interface ErrorType {
     status: number;
@@ -129,24 +130,6 @@ export const majorsInfoScraper = async (): Promise<Major[] | ErrorType> => {
 
         return majorsFullInfo.filter((major): major is Major => major !== null);
     } catch (error) {
-        // @ts-ignore
-        if (error?.response?.status === 404) {
-            return {
-                // @ts-ignore
-                status: error.response.status,
-                message: 'Sorry! Could not find majors',
-            };
-        }
-
-        // @ts-ignore
-        if (error?.response?.status) {
-            return {
-                // @ts-ignore
-                status: error.response.status,
-                message: 'Something went wrong',
-            };
-        }
-
-        return { status: 500, message: 'Something went wrong' };
+        return returnScraperError(error);
     }
 };
