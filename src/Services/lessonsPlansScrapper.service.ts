@@ -14,6 +14,7 @@ import Papa from 'papaparse';
 import * as _ from 'lodash';
 import axios from 'axios';
 import { ErrorType } from 'Types/error.type';
+import { returnScraperError } from '../utils/errorScraper';
 
 export const getDataFromCSV = async (
     url: string,
@@ -223,23 +224,6 @@ export const lessonPlansScrapper = async (): Promise<
 
         return result;
     } catch (error: any) {
-        if (error.response.status === 404) {
-            return {
-                status: error.response.status,
-                message: 'Sorry! Lessons plan sites are not responding',
-            };
-        }
-
-        if (error.response.status) {
-            return {
-                status: error.response.status,
-                message: 'Something went wrong with one of the requests',
-            };
-        }
-
-        return {
-            status: 500,
-            message: 'Something went wrong with lessons plan scrapper',
-        };
+        return returnScraperError(error);
     }
 };
