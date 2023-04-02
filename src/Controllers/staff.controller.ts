@@ -17,10 +17,11 @@ export const getStaff = async (
         const { page, name } = req.query;
         const criteria = name ? { name: { $regex: name, $options: 'i' } } : {};
         const pageNumber = page ? parseInt(page, 10) : 1;
-        const staff = await StaffModel.find(criteria, {
-            __v: 0,
-            'content.posts._id': 0,
-        })
+
+        const staff = await StaffModel.find(
+            { name: { $regex: name, $options: 'i' } },
+            { __v: 0, 'content.posts._id': 0 }
+        )
             .skip((pageNumber - 1) * 30)
             .limit(30);
 
