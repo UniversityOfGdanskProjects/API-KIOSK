@@ -1,9 +1,9 @@
-import { lessonPlansScrapper } from '../Services/lessonsPlansScrapper.service';
+import { lessonsPlansScrapper } from '../Services/lessonsPlansScrapper.service';
 import { LessonsModel } from '../Models/lessonPlanEntry.model';
 
 export const updateLessons = async (): Promise<void> => {
     try {
-        const scrappedLessons = await lessonPlansScrapper();
+        const scrappedLessons = await lessonsPlansScrapper();
 
         if ('status' in scrappedLessons) {
             console.log(scrappedLessons);
