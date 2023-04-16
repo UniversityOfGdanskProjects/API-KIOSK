@@ -79,7 +79,7 @@ const getNewsInCategoriessMFI = async (
 };
 
 export const newsScraperINF = async (): Promise<News[] | null> => {
-    const infNewsSites = ['newsssss', 'studinfo'];
+    const infNewsSites = ['news', 'studinfo'];
     const newsINFPromises = (await Promise.allSettled(
         infNewsSites.map(async (site) => {
             return await getNewsInCategoriesINF(site);

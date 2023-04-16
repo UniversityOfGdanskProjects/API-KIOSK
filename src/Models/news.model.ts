@@ -27,7 +27,7 @@ const NewsSchema = new mongoose.Schema<News>({
     body: [
         {
             type: String,
-            required: true,
+            required: false,
         },
     ],
     source: {
