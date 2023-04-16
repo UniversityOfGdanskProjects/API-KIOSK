@@ -1,7 +1,7 @@
 export interface News {
     photo: string;
     link: string;
-    datetime: string;
+    datetime: Date;
     title: string;
     shortBody: string[];
     body: string[];

@@ -11,7 +11,7 @@ const NewsSchema = new mongoose.Schema<News>({
         required: true,
     },
     datetime: {
-        type: String,
+        type: Date,
         required: true,
     },
     title: {
