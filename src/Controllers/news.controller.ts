@@ -8,7 +8,14 @@ export const getAllNews = async (
     res: Response<News[] | Partial<ErrorType>>
 ) => {
     try {
-        const news = await NewsModel.find({}, { __v: 0 });
+        const { source } = req.query;
+        const news = source
+            ? await NewsModel.find(
+                  { source: source },
+                  { __v: 0 },
+                  { sort: { datetime: -1 } }
+              )
+            : await NewsModel.find({}, { __v: 0 }, { sort: { datetime: -1 } });
 
         return res.json(news);
     } catch (error) {

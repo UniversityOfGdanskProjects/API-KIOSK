@@ -6,6 +6,7 @@ import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
 import { splitByLines } from '../utils/newsScraper/splitByLines';
 import { mapNewsCategory } from '../utils/newsScraper/returnCategoryEnum';
 import { ErrorType } from 'Types/error.type';
+import { convertStringToDate } from '../utils/newsScraper/convertStringToDate';
 
 const getBody = async (link: string, element: string): Promise<string> => {
     const HTMLDataRequest = await axios.get(link);
@@ -63,7 +64,7 @@ const getNewsInCategoriessMFI = async (
                 const newsDetail: News = {
                     photo: 'https://mfi.ug.edu.pl' + img,
                     link: 'https://mfi.ug.edu.pl' + href,
-                    datetime: datetime,
+                    datetime: convertStringToDate(datetime),
                     title: title,
                     shortBody: splitByLines(shortDescription),
                     body: splitByLines(longBody),
@@ -79,7 +80,7 @@ const getNewsInCategoriessMFI = async (
 };
 
 export const newsScraperINF = async (): Promise<News[] | null> => {
-    const infNewsSites = ['newsssss', 'studinfo'];
+    const infNewsSites = ['news', 'studinfo'];
     const newsINFPromises = (await Promise.allSettled(
         infNewsSites.map(async (site) => {
             return await getNewsInCategoriesINF(site);
@@ -126,7 +127,7 @@ const getNewsInCategoriesINF = async (
                 const newsDetail: News = {
                     photo: 'https://inf.ug.edu.pl/' + img,
                     link: 'https://inf.ug.edu.pl/' + href,
-                    datetime: reformatDate(datetime),
+                    datetime: convertStringToDate(reformatDate(datetime)),
                     title: title,
                     shortBody: splitByLines(body),
                     body: splitByLines(longBody),
