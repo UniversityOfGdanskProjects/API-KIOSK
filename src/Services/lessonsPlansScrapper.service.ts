@@ -14,7 +14,7 @@ import {
     transformCSVField,
     getYearFromMajorName,
     transformGroupName,
-} from '@/utils/scrappers/lessonsPlanScrapper';
+} from '../utils/scrappers/lessonsPlanScrapper';
 
 const MAIN_URL = 'https://inf.ug.edu.pl/plan/';
 
