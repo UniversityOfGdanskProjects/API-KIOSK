@@ -1,12 +1,6 @@
 import { getAllDegreeURLs } from './getAlldegreeURL.service';
 import { getAllSubjectsDegreeURLs } from './getAllSubjectsURLs.service';
 import { scrappedEctsSubjects } from './utils/scrappedEctsSubjects';
-import errorHandler from '../../utils/scrappers/errors/errorHandler';
-import {
-    defaultMessage,
-    internalServerMessage,
-    notFoundMessage,
-} from './utils/message';
 import checkSubjects from '../../utils/scrappers/ectsScrapper/checkSubjects';
 import { returnScraperError } from '@/utils/errorScraper';
 
