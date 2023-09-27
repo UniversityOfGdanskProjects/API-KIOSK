@@ -8,6 +8,7 @@ import {
     notFoundMessage,
 } from './utils/message';
 import checkSubjects from '../../utils/scrappers/ectsScrapper/checkSubjects';
+import { returnScraperError } from '@/utils/errorScraper';
 
 export const getAllUrls = async () => {
     {
@@ -29,16 +30,10 @@ export const getAllUrls = async () => {
 
             allSubjectsURLs.concat(getSpecialCases);
             const ectsSubjects = await scrappedEctsSubjects(allSubjectsURLs);
-            console.log(ectsSubjects);
 
             return ectsSubjects;
         } catch (error: any) {
-            errorHandler(
-                error,
-                defaultMessage,
-                notFoundMessage,
-                internalServerMessage
-            );
+            return returnScraperError(error);
         }
     }
 };
