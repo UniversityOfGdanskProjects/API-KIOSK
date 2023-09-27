@@ -1,4 +1,3 @@
-import { checkIfFaculty } from '../utils/lessonsPlanScrapper/checkIfFaculty';
 import { LessonsPlanURLObject } from '../Types/lessonsPlanURLObject.type';
 import { LessonsPlanEntry } from '../Types/lessonsPlanEntry.type';
 import { PlanEntryFromCSV } from '../Types/planEntryFromCSV.type';
@@ -8,12 +7,13 @@ import {
     transformCSVHeader,
     transformGroupName,
     transformCSVField,
-} from '../utils/lessonsPlanScrapper';
+    checkIfFaculty,
+} from '../utils/scrappers/lessonsPlanScrapper';
 import cheerio from 'cheerio';
 import Papa from 'papaparse';
 import * as _ from 'lodash';
 import axios from 'axios';
-import { ErrorType } from 'Types/error.type';
+import errorHandler from '@/utils/scrappers/errors/errorHandler';
 
 export const getDataFromCSV = async (
     url: string,
@@ -223,23 +223,10 @@ export const lessonPlansScrapper = async (): Promise<
 
         return result;
     } catch (error: any) {
-        if (error.response.status === 404) {
-            return {
-                status: error.response.status,
-                message: 'Sorry! Lessons plan sites are not responding',
-            };
-        }
-
-        if (error.response.status) {
-            return {
-                status: error.response.status,
-                message: 'Something went wrong with one of the requests',
-            };
-        }
-
-        return {
-            status: 500,
-            message: 'Something went wrong with lessons plan scrapper',
-        };
+        errorHandler(
+            error,
+            'Something went wrong with one of the requests',
+            'Sorry! Lessons plan sites are not responding,Something went wrong with lessons plan scrapper'
+        );
     }
 };

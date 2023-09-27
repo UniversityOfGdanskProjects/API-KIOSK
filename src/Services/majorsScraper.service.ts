@@ -3,7 +3,7 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import { Major, MajorContent } from '../Types/major.type';
 import { parseHTMLInText } from '../utils/parseHTMLInText';
-import { fixMajorName } from '../utils/majorsScraper/fixMajorName';
+import { fixMajorName } from '../utils/Scrappers/majorsScraper/fixMajorName';
 
 export interface ErrorType {
     status: number;
