@@ -129,24 +129,6 @@ export const majorsInfoScraper = async (): Promise<Major[] | ErrorType> => {
 
         return majorsFullInfo.filter((major): major is Major => major !== null);
     } catch (error) {
-        // @ts-ignore
-        if (error?.response?.status === 404) {
-            return {
-                // @ts-ignore
-                status: error.response.status,
-                message: 'Sorry! Could not find majors',
-            };
-        }
-
-        // @ts-ignore
-        if (error?.response?.status) {
-            return {
-                // @ts-ignore
-                status: error.response.status,
-                message: 'Something went wrong',
-            };
-        }
-
-        return { status: 500, message: 'Something went wrong' };
+        return returnScraperError(error);
     }
 };
