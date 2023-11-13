@@ -2,7 +2,7 @@ import { getAllDegreeURLs } from './getAlldegreeURL.service';
 import { getAllSubjectsDegreeURLs } from './getAllSubjectsURLs.service';
 import { scrappedEctsSubjects } from './utils/scrappedEctsSubjects';
 import checkSubjects from '../../utils/scrappers/ectsScrapper/checkSubjects';
-import { returnScraperError } from '@/utils/errorScraper';
+import { returnScraperError } from '../../utils/errorScraper';
 
 export const getAllUrls = async () => {
     {
@@ -13,8 +13,8 @@ export const getAllUrls = async () => {
             );
 
             const specialCases = allSubjectsURLs
-                .filter((el, _) => checkSubjects(el.name))
-                .map((el, _) => {
+                .filter((el) => checkSubjects(el.name))
+                .map((el) => {
                     return { url: el.url, degree: el.degree };
                 });
 
@@ -22,11 +22,24 @@ export const getAllUrls = async () => {
                 specialCases
             );
 
-            allSubjectsURLs.concat(getSpecialCases);
-            const ectsSubjects = await scrappedEctsSubjects(allSubjectsURLs);
+            const ogolna = allSubjectsURLs
+                .filter((el) => checkSubjects(el.name))
+                .map((el) => {
+                    return { url: el.url, degree: el.degree };
+                });
+            const ogolnoAkademickaCase =
+                ogolna && (await getAllSubjectsDegreeURLs(ogolna));
+
+            const withSpecialCases = allSubjectsURLs
+                .concat(getSpecialCases)
+                .concat(ogolnoAkademickaCase);
+
+            const ectsSubjects = await scrappedEctsSubjects(withSpecialCases);
 
             return ectsSubjects;
         } catch (error: any) {
+            console.log(error);
+
             return returnScraperError(error);
         }
     }

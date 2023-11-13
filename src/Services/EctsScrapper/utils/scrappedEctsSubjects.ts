@@ -1,5 +1,7 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
+import { checkYearsAndTerms } from '../../../utils/scrappers/ectsScrapper/checkYearsAndTerms';
+import { isProper } from '../../../utils/scrappers/ectsScrapper/isProper';
 
 export const scrappedEctsSubjects = async (
     finalSubject: {
@@ -21,7 +23,8 @@ export const scrappedEctsSubjects = async (
             const finalData = tables.map((_, table) => {
                 const rows = $1(table).children('tbody').find('tr');
 
-                let term = '';
+                let temporaryTerm = '';
+                let temporaryYear = '';
 
                 const subjects = rows
                     .map((index, row) => {
@@ -46,8 +49,11 @@ export const scrappedEctsSubjects = async (
                             .text()
                             .replace(/(\n|\t)/gm, '');
 
-                        if (subject.startsWith('I')) {
-                            term = subject;
+                        const checked = checkYearsAndTerms(subject);
+
+                        if (checked) {
+                            temporaryTerm = checked.term as string;
+                            temporaryYear = checked.year as string;
                         }
 
                         return {
@@ -59,19 +65,12 @@ export const scrappedEctsSubjects = async (
                             ects,
                             major: major.name,
                             degree: major.degree,
-                            term,
+                            term: temporaryTerm,
+                            year: temporaryYear,
                         };
                     })
                     .get()
-                    .filter((el) => {
-                        if (
-                            !el.subject.startsWith('Razem') &&
-                            el.subject !== '' &&
-                            !el.subject.startsWith('I')
-                        ) {
-                            return el;
-                        }
-                    });
+                    .filter((el) => isProper(el.subject));
 
                 return subjects;
             });
