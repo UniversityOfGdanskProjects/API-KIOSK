@@ -10,71 +10,67 @@ export const scrappedEctsSubjects = async (
         degree: string;
     }[]
 ) => {
-    const recruitment = finalSubject
-        .filter((el, i) => {
-            return el.name !== 'Informatyka' && el.name !== 'Matematyka';
-        })
-        .map(async (major, index) => {
-            const { data } = await axios.get(major.url);
-            const $1 = cheerio.load(data);
+    const recruitment = finalSubject.map(async (major, index) => {
+        const { data } = await axios.get(major.url);
+        const $1 = cheerio.load(data);
 
-            const tables = $1('table').slice(0, -1);
+        const tables = $1('table').slice(0, -1);
 
-            const finalData = tables.map((_, table) => {
-                const rows = $1(table).children('tbody').find('tr');
+        const finalData = tables.map((_, table) => {
+            const rows = $1(table).children('tbody').find('tr');
 
-                let temporaryTerm = '';
-                let temporaryYear = '';
+            let temporaryTerm = '';
+            let temporaryYear = '';
 
-                const subjects = rows
-                    .map((index, row) => {
-                        const all = $1(row).find('td').get();
-                        const subject = $1(all[0])
-                            .text()
-                            .replace(/(\n|\t|\u00a0)/gm, '');
+            const subjects = rows
+                .map((index, row) => {
+                    const all = $1(row).find('td').get();
+                    const subject = $1(all[0])
+                        .text()
+                        .replace(/(\n|\t|\u00a0)/gm, '');
 
-                        const lecture = $1(all[1])
-                            .text()
-                            .replace(/(\n|\t)/gm, '');
-                        const recitation = $1(all[2])
-                            .text()
-                            .replace(/(\n|\t)/gm, '');
-                        const labs = $1(all[3])
-                            .text()
-                            .replace(/(\n|\t)/gm, '');
-                        const pass = $1(all[5])
-                            .text()
-                            .replace(/(\n|\t)/gm, '');
-                        const ects = $1(all[6])
-                            .text()
-                            .replace(/(\n|\t)/gm, '');
+                    const lecture = $1(all[1])
+                        .text()
+                        .replace(/(\n|\t)/gm, '');
+                    const recitation = $1(all[2])
+                        .text()
+                        .replace(/(\n|\t)/gm, '');
+                    const labs = $1(all[3])
+                        .text()
+                        .replace(/(\n|\t)/gm, '');
+                    const pass = $1(all[5])
+                        .text()
+                        .replace(/(\n|\t)/gm, '');
+                    const ects = $1(all[6])
+                        .text()
+                        .replace(/(\n|\t)/gm, '');
 
-                        const checked = checkYearsAndTerms(subject);
+                    const checked = checkYearsAndTerms(subject);
 
-                        if (checked) {
-                            temporaryTerm = checked.term as string;
-                            temporaryYear = checked.year as string;
-                        }
+                    if (checked) {
+                        temporaryTerm = checked.term as string;
+                        temporaryYear = checked.year as string;
+                    }
 
-                        return {
-                            subject,
-                            lecture,
-                            recitation,
-                            labs,
-                            pass,
-                            ects,
-                            major: major.name,
-                            degree: major.degree,
-                            term: temporaryTerm,
-                            year: temporaryYear,
-                        };
-                    })
-                    .get()
-                    .filter((el) => isProper(el.subject));
+                    return {
+                        subject,
+                        lecture,
+                        recitation,
+                        labs,
+                        pass,
+                        ects,
+                        major: major.name,
+                        degree: major.degree,
+                        term: temporaryTerm,
+                        year: temporaryYear,
+                    };
+                })
+                .get()
+                .filter((el) => isProper(el.subject));
 
-                return subjects;
-            });
-            return finalData.get();
+            return subjects;
         });
+        return finalData.get();
+    });
     return (await Promise.all(recruitment)).flat();
 };

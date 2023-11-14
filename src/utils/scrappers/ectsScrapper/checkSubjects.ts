@@ -1,6 +1,4 @@
 const checkSubjects = (subject: string) =>
-    subject === 'Informatyka' ||
-    subject === 'Matematyka' ||
-    'Informatyka profil ogólnoakademicki studia stacjonarne';
+    subject === 'Informatyka profil ogólnoakademicki studia stacjonarne';
 
 export default checkSubjects;
