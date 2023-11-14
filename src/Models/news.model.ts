@@ -2,10 +2,16 @@ import mongoose from 'mongoose';
 import { News, NewsCategory, NewsSource } from '../Types/News.type';
 
 const NewsSchema = new mongoose.Schema<News>({
-    photo: {
+    leadingPhoto: {
         type: String,
         required: true,
     },
+    photos: [
+        {
+            type: String,
+            required: false,
+        },
+    ],
     link: {
         type: String,
         required: true,
