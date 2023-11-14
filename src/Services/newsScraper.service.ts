@@ -17,6 +17,26 @@ const getBody = async (link: string, element: string): Promise<string> => {
     return $(selectedElem).text();
 };
 
+const getPhotos = async (
+    site: string,
+    leadingPhoto: string,
+    element: string
+): Promise<string[] | []> => {
+    const HTMLDataRequest = await axios.get(site);
+    const HTMLData = HTMLDataRequest.data;
+
+    const $ = cheerio.load(HTMLData);
+    const photos =
+        ($(element)
+            .map(function () {
+                return leadingPhoto != $(this).attr('href')
+                    ? $(this).attr('href')
+                    : null;
+            })
+            .get() as string[]) || [];
+    return photos.filter((photo) => photo);
+};
+
 export const newsScraperMFI = async (): Promise<News[] | null> => {
     const mfiNewsSites = ['aktualnosci', 'aktualnosci/archiwum-aktualnosci'];
     const newsMFIPromises = (await Promise.allSettled(
@@ -60,9 +80,16 @@ const getNewsInCategoriessMFI = async (
                     '.node__content > div:nth-child(2) > div:nth-child(1)'
                 );
                 const shortDescription = removeSeeMore(body);
+                const mainPhoto = 'https://mfi.ug.edu.pl' + img;
+                const manyPhotos = await getPhotos(
+                    'https://mfi.ug.edu.pl/' + href,
+                    mainPhoto,
+                    '.colorbox'
+                );
 
                 const newsDetail: News = {
-                    photo: 'https://mfi.ug.edu.pl' + img,
+                    leadingPhoto: mainPhoto,
+                    photos: manyPhotos,
                     link: 'https://mfi.ug.edu.pl' + href,
                     datetime: convertStringToDate(datetime),
                     title: title,
@@ -124,8 +151,11 @@ const getNewsInCategoriesINF = async (
                     'https://inf.ug.edu.pl/' + href,
                     '.artBody'
                 );
+                const mainPhoto = 'https://inf.ug.edu.pl/' + img;
+
                 const newsDetail: News = {
-                    photo: 'https://inf.ug.edu.pl/' + img,
+                    leadingPhoto: mainPhoto,
+                    photos: [],
                     link: 'https://inf.ug.edu.pl/' + href,
                     datetime: convertStringToDate(reformatDate(datetime)),
                     title: title,
