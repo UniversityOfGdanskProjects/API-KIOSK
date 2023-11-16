@@ -2,7 +2,6 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import { mainEctsUrl } from './getAlldegreeURL.service';
 import { ectsSubject } from '../../Types/ectsSubject';
-import { startsWith } from 'lodash';
 import { scrappedEctsSubjectsType } from './utils/scrappedType';
 
 export const getAllSubjectsDegreeURLs = async (
@@ -31,7 +30,7 @@ export const getAllSubjectsDegreeURLs = async (
                             name: major,
                             url: mainEctsUrl + URL,
                             degree: el.degree,
-                            year: `${exclusionYear}/${exclusionYear + 1}`,
+                            recruitmentYear: Number(exclusionYear),
                         };
                     }
 
@@ -52,7 +51,7 @@ export const getAllSubjectsDegreeURLs = async (
                                 name: name,
                                 url: finalURL,
                                 degree: el.degree,
-                                year: `${exclusionYear}/${exclusionYear + 1}`,
+                                recruitmentYear: Number(exclusionYear),
                             };
                         })
                         .get();

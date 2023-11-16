@@ -4,6 +4,7 @@ import { scrappedEctsSubjects } from './utils/scrappedEctsSubjects';
 import checkSubjects from '../../utils/scrappers/ectsScrapper/checkSubjects';
 import { returnScraperError } from '../../utils/errorScraper';
 import { scrappedEctsSubjectsType } from './utils/scrappedType';
+import _, { isEmpty } from 'lodash';
 
 export const getAllUrls = async () => {
     {
@@ -18,7 +19,7 @@ export const getAllUrls = async () => {
                 allSubjectsURLs as scrappedEctsSubjectsType[][]
             )
                 .flat()
-                .filter((el) => isNaN(parseInt(el.year.slice(0, 4))))
+                .filter((el) => isNaN(el.recruitmentYear))
                 .map((el) => ({ url: el.url, degree: el.degree }));
 
             const getSpecialCases = (
@@ -29,22 +30,32 @@ export const getAllUrls = async () => {
                 .filter((el) => checkSubjects(el.name))
                 .map((el) => ({ url: el.url, degree: el.degree }));
 
-            const ogolnoAkademickaCase = await getAllSubjectsDegreeURLs(
-                ogolna,
-                true
-            );
+            const theWorstCase = await getAllSubjectsDegreeURLs(ogolna, true);
 
             const withSpecialCases = allSubjectsURLs
                 .concat(getSpecialCases)
-                .concat(ogolnoAkademickaCase)
+                .concat(theWorstCase)
                 .flat()
-                .filter((el) => parseInt(el.year.slice(0, 4)) < 2023);
+                .filter((el) => el.recruitmentYear < 2023);
 
             const ectsSubjects = await scrappedEctsSubjects(withSpecialCases);
 
-            return ectsSubjects;
+            const groupedByRecruitmentYear = _.groupBy(ectsSubjects, (obj) =>
+                JSON.stringify(_.omit(obj, 'recruitmentYear'))
+            );
+
+            const resultArray = _.map(groupedByRecruitmentYear, (group) => {
+                const recruitmentYearValues = _.map(group, 'recruitmentYear');
+                return {
+                    ..._.omit(group[0], 'recruitmentYear'),
+                    recruitmentYear: recruitmentYearValues,
+                };
+            });
+
+            console.log(resultArray);
+
+            return resultArray;
         } catch (error: any) {
-            console.log(error);
             return returnScraperError(error);
         }
         // }

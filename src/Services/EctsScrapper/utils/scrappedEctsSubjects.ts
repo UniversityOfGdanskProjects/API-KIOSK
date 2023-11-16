@@ -8,6 +8,7 @@ export const scrappedEctsSubjects = async (
         name: string;
         url: string;
         degree: string;
+        recruitmentYear: number;
     }[]
 ) => {
     const recruitment = finalSubject.map(async (major, index) => {
@@ -19,8 +20,8 @@ export const scrappedEctsSubjects = async (
         const finalData = tables.map((_, table) => {
             const rows = $1(table).children('tbody').find('tr');
 
-            let temporaryTerm = '';
-            let temporaryYear = '';
+            let temporaryTerm = 0;
+            let temporaryYear = 0;
 
             const subjects = rows
                 .map((index, row) => {
@@ -48,8 +49,8 @@ export const scrappedEctsSubjects = async (
                     const checked = checkYearsAndTerms(subject);
 
                     if (checked) {
-                        temporaryTerm = checked.term as string;
-                        temporaryYear = checked.year as string;
+                        temporaryTerm = checked.term;
+                        temporaryYear = checked.year;
                     }
 
                     return {
@@ -63,6 +64,7 @@ export const scrappedEctsSubjects = async (
                         degree: major.degree,
                         term: temporaryTerm,
                         year: temporaryYear,
+                        recruitmentYear: major.recruitmentYear,
                     };
                 })
                 .get()
