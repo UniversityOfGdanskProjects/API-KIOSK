@@ -14,8 +14,7 @@ const getBody = async (link: string, element: string): Promise<string> => {
     const HTMLData = HTMLDataRequest.data;
 
     const $ = cheerio.load(HTMLData);
-    const selectedElem = element;
-    return $(selectedElem).text();
+    return $(element).text();
 };
 
 const getPhotos = async (
