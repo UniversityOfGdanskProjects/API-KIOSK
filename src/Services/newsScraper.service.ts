@@ -7,6 +7,7 @@ import { splitByLines } from '../utils/newsScraper/splitByLines';
 import { mapNewsCategory } from '../utils/newsScraper/returnCategoryEnum';
 import { ErrorType } from 'Types/error.type';
 import { convertStringToDate } from '../utils/newsScraper/convertStringToDate';
+import { removeNewLines } from '../utils/newsScraper/removeNewLines';
 
 const getBody = async (link: string, element: string): Promise<string> => {
     const HTMLDataRequest = await axios.get(link);
@@ -93,7 +94,7 @@ const getNewsInCategoriessMFI = async (
                     link: 'https://mfi.ug.edu.pl' + href,
                     datetime: convertStringToDate(datetime),
                     title: title,
-                    shortBody: splitByLines(shortDescription),
+                    shortBody: removeNewLines(shortDescription),
                     body: splitByLines(longBody),
                     source: NewsSource.MFI,
                     category: mapNewsCategory($('h1.title').text()),
@@ -159,7 +160,7 @@ const getNewsInCategoriesINF = async (
                     link: 'https://inf.ug.edu.pl/' + href,
                     datetime: convertStringToDate(reformatDate(datetime)),
                     title: title,
-                    shortBody: splitByLines(body),
+                    shortBody: removeNewLines(body),
                     body: splitByLines(longBody),
                     source: NewsSource.INF,
                     category: mapNewsCategory($('div.artHeader').text()),
