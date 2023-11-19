@@ -1,12 +1,14 @@
 import { getAllDegreeURLs } from './getAlldegreeURL.service';
 import { getAllSubjectsDegreeURLs } from './getAllSubjectsURLs.service';
 import { scrappedEctsSubjects } from './utils/scrappedEctsSubjects';
-import checkSubjects from '../../utils/scrappers/ectsScrapper/checkSubjects';
 import { returnScraperError } from '../../utils/errorScraper';
-import { scrappedEctsSubjectsType } from './utils/scrappedType';
-import _, { isEmpty } from 'lodash';
+import { scrappedEctsSubjectsType } from '../../Types/EctsScrapper/scrappedEctsSubjectsType';
+import { omit, map, groupBy } from 'lodash';
+import isTheWorstCase from '@/utils/scrappers/ectsScrapper/checkSubjects';
+import { ectsSubject } from 'Types/EctsScrapper/ectsSubject';
+import { ErrorType } from 'Types/error.type';
 
-export const getAllUrls = async () => {
+export const ectsScrapper = async (): Promise<ectsSubject[] | ErrorType> => {
     {
         try {
             const allDegreeURLs = await getAllDegreeURLs();
@@ -27,7 +29,7 @@ export const getAllUrls = async () => {
             ).flat();
 
             const ogolna = getSpecialCases
-                .filter((el) => checkSubjects(el.name))
+                .filter((el) => isTheWorstCase(el.name))
                 .map((el) => ({ url: el.url, degree: el.degree }));
 
             const theWorstCase = await getAllSubjectsDegreeURLs(ogolna, true);
@@ -40,24 +42,21 @@ export const getAllUrls = async () => {
 
             const ectsSubjects = await scrappedEctsSubjects(withSpecialCases);
 
-            const groupedByRecruitmentYear = _.groupBy(ectsSubjects, (obj) =>
-                JSON.stringify(_.omit(obj, 'recruitmentYear'))
+            const groupedByRecruitmentYear = groupBy(ectsSubjects, (obj) =>
+                JSON.stringify(omit(obj, 'recruitmentYear'))
             );
 
-            const resultArray = _.map(groupedByRecruitmentYear, (group) => {
-                const recruitmentYearValues = _.map(group, 'recruitmentYear');
+            const resultArray = map(groupedByRecruitmentYear, (group) => {
+                const recruitmentYearValues = map(group, 'recruitmentYear');
                 return {
-                    ..._.omit(group[0], 'recruitmentYear'),
+                    ...omit(group[0], 'recruitmentYear'),
                     recruitmentYear: recruitmentYearValues,
                 };
             });
-
-            console.log(resultArray);
 
             return resultArray;
         } catch (error: any) {
             return returnScraperError(error);
         }
-        // }
     }
 };

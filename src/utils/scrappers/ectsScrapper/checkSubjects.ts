@@ -1,4 +1,5 @@
-const checkSubjects = (subject: string) =>
-    subject === 'Informatyka profil ogólnoakademicki studia stacjonarne';
+import { WORSTCASESUBCJECT } from 'Services/EctsScrapper/utils/EctsScrappersURLs.const';
 
-export default checkSubjects;
+const isTheWorstCase = (subject: string) => subject === WORSTCASESUBCJECT;
+
+export default isTheWorstCase;

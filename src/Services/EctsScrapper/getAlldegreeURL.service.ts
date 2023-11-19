@@ -1,14 +1,10 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-
-export const mainEctsUrl = 'https://mfi.ug.edu.pl';
-
-const degreeURL =
-    '/studenci/plany-zajec-i-programy-studiow/aktualne-programy-studiow';
+import { DEGREEURL, MAINECTSURL } from './utils/EctsScrappersURLs.const';
 
 export const getAllDegreeURLs = async () => {
     try {
-        const { data } = await axios.get(mainEctsUrl + degreeURL);
+        const { data } = await axios.get(MAINECTSURL + DEGREEURL);
         const $ = cheerio.load(data);
 
         const allDegreeURLs = $('a.btn-frame')

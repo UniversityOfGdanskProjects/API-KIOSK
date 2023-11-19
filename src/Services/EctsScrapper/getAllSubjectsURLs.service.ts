@@ -1,18 +1,18 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-import { mainEctsUrl } from './getAlldegreeURL.service';
-import { ectsSubject } from '../../Types/ectsSubject';
-import { scrappedEctsSubjectsType } from './utils/scrappedType';
+import { ectsSubject } from '../../Types/EctsScrapper/ectsSubject';
+import { scrappedEctsSubjectsType } from '../../Types/EctsScrapper/scrappedEctsSubjectsType';
+import { MAINECTSURL } from './utils/EctsScrappersURLs.const';
 
 export const getAllSubjectsDegreeURLs = async (
-    props: Pick<ectsSubject, 'degree' | 'url'>[],
+    props: Pick<scrappedEctsSubjectsType, 'degree' | 'url'>[],
     isSpecial: boolean
 ) => {
     try {
-        const allSubjectsDegree = props.map(async (el, i) => {
+        const allSubjectsDegree = props.map(async (el) => {
             const { data } = isSpecial
                 ? await axios.get(el.url)
-                : await axios.get(mainEctsUrl + el.url);
+                : await axios.get(MAINECTSURL + el.url);
 
             const $1 = cheerio.load(data);
             const major = $1('.title').text();
@@ -28,13 +28,13 @@ export const getAllSubjectsDegreeURLs = async (
                         );
                         return {
                             name: major,
-                            url: mainEctsUrl + URL,
+                            url: MAINECTSURL + URL,
                             degree: el.degree,
                             recruitmentYear: Number(exclusionYear),
                         };
                     }
 
-                    const { data } = await axios.get(mainEctsUrl + URL);
+                    const { data } = await axios.get(MAINECTSURL + URL);
                     const $2 = cheerio.load(data);
 
                     const allDegreeURLs = $2('a.btn-frame')
@@ -44,7 +44,7 @@ export const getAllSubjectsDegreeURLs = async (
                             );
 
                             const finalURL = `${
-                                mainEctsUrl + $2(element).attr('href')
+                                MAINECTSURL + $2(element).attr('href')
                             }`;
 
                             return {
