@@ -1,6 +1,9 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-import { DEGREEURL, MAINECTSURL } from './utils/EctsScrappersURLs.const';
+import {
+    DEGREEURL,
+    MAINECTSURL,
+} from '../../../utils/scrappers/ectsScrapper/EctsScrappersURLs.const';
 
 export const getAllDegreeURLs = async () => {
     try {

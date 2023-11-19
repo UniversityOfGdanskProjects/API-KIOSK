@@ -1,12 +1,12 @@
-import { getAllDegreeURLs } from './getAlldegreeURL.service';
-import { getAllSubjectsDegreeURLs } from './getAllSubjectsURLs.service';
-import { scrappedEctsSubjects } from './utils/scrappedEctsSubjects';
+import { getAllDegreeURLs } from './utils/getAlldegreeURL.service';
+import { getAllSubjectsDegreeURLs } from './utils/getAllSubjectsURLs.service';
+import { scrappedEctsSubjects } from './utils/scrappedEctsSubjects.service';
 import { returnScraperError } from '../../utils/errorScraper';
 import { scrappedEctsSubjectsType } from '../../Types/EctsScrapper/scrappedEctsSubjectsType';
 import { omit, map, groupBy } from 'lodash';
-import isTheWorstCase from '@/utils/scrappers/ectsScrapper/checkSubjects';
 import { ectsSubject } from 'Types/EctsScrapper/ectsSubject';
 import { ErrorType } from 'Types/error.type';
+import isTheWorstCase from '../../utils/scrappers/ectsScrapper/isTheWorstCase';
 
 export const ectsScrapper = async (): Promise<ectsSubject[] | ErrorType> => {
     {

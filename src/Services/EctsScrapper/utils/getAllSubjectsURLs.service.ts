@@ -1,8 +1,8 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-import { ectsSubject } from '../../Types/EctsScrapper/ectsSubject';
-import { scrappedEctsSubjectsType } from '../../Types/EctsScrapper/scrappedEctsSubjectsType';
-import { MAINECTSURL } from './utils/EctsScrappersURLs.const';
+import { ectsSubject } from '../../../Types/EctsScrapper/ectsSubject';
+import { scrappedEctsSubjectsType } from '../../../Types/EctsScrapper/scrappedEctsSubjectsType';
+import { MAINECTSURL } from '../../../utils/scrappers/ectsScrapper/EctsScrappersURLs.const';
 
 export const getAllSubjectsDegreeURLs = async (
     props: Pick<scrappedEctsSubjectsType, 'degree' | 'url'>[],
