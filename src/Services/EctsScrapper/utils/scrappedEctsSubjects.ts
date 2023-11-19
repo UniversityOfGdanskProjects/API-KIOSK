@@ -2,16 +2,12 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import { checkYearsAndTerms } from '../../../utils/scrappers/ectsScrapper/checkYearsAndTerms';
 import { isProper } from '../../../utils/scrappers/ectsScrapper/isProper';
+import { scrappedEctsSubjectsType } from 'Types/EctsScrapper/scrappedEctsSubjectsType';
 
 export const scrappedEctsSubjects = async (
-    finalSubject: {
-        name: string;
-        url: string;
-        degree: string;
-        recruitmentYear: number;
-    }[]
+    finalSubjects: scrappedEctsSubjectsType[]
 ) => {
-    const recruitment = finalSubject.map(async (major, index) => {
+    const recruitment = finalSubjects.map(async (major, index) => {
         const { data } = await axios.get(major.url);
         const $1 = cheerio.load(data);
 
