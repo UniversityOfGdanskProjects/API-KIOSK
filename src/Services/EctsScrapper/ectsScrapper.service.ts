@@ -35,8 +35,7 @@ export const ectsScrapper = async (): Promise<ectsSubject[] | ErrorType> => {
             const theWorstCase = await getAllSubjectsDegreeURLs(ogolna, true);
 
             const withSpecialCases = allSubjectsURLs
-                .concat(getSpecialCases)
-                .concat(theWorstCase)
+                .concat(getSpecialCases, theWorstCase)
                 .flat()
                 .filter((el) => el.recruitmentYear < 2023);
 

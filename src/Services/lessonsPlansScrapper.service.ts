@@ -38,8 +38,6 @@ export const lessonsPlansScrapper = async (): Promise<
             return acc;
         }, []);
 
-        console.log(finalResult);
-
         return finalResult;
     } catch (error) {
         return returnScraperError(error);
