@@ -5,7 +5,7 @@ export interface News {
     datetime: Date;
     title: string;
     shortBody: string;
-    body: string[];
+    body: string;
     source: NewsSource;
     category: NewsCategory;
 }
