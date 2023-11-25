@@ -3,17 +3,18 @@ import { PlanEntryFromCSV } from '../Types/planEntryFromCSV.type';
 import { LessonsPlanEntry } from '../Types/lessonsPlanEntry.type';
 import { returnScraperError } from '../utils/errorScraper';
 import { ErrorType } from '../Types/error.type';
-import {
-    checkIfFaculty,
-    getURLWithoutQuery,
-    getYearFromMajorName,
-    transformCSVField,
-    transformCSVHeader,
-    transformGroupName,
-} from '../utils/lessonsPlanScrapper';
+
 import cheerio from 'cheerio';
 import Papa from 'papaparse';
 import axios from 'axios';
+import {
+    getURLWithoutQuery,
+    checkIfFaculty,
+    transformCSVHeader,
+    transformCSVField,
+    getYearFromMajorName,
+    transformGroupName,
+} from '../utils/scrappers/lessonsPlanScrapper';
 
 const MAIN_URL = 'https://inf.ug.edu.pl/plan/';
 
@@ -36,8 +37,6 @@ export const lessonsPlansScrapper = async (): Promise<
             acc.push(...lessonsArray);
             return acc;
         }, []);
-
-        console.log(finalResult);
 
         return finalResult;
     } catch (error) {
