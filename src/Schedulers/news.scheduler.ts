@@ -10,8 +10,22 @@ export const updateNews = async () => {
         const newsMFI = await newsScraperMFI();
 
         await NewsModel.deleteMany({});
-        await NewsModel.insertMany(newsINF);
-        await NewsModel.insertMany(newsMFI);
+        if (newsINF && newsINF.length > 0) {
+            newsINF.forEach(async (news) => {
+                await NewsModel.findOneAndUpdate({ title: news.title }, news, {
+                    upsert: true,
+                    new: true,
+                });
+            });
+        }
+        if (newsMFI && newsMFI.length > 0) {
+            newsMFI.forEach(async (news) => {
+                await NewsModel.findOneAndUpdate({ title: news.title }, news, {
+                    upsert: true,
+                    new: true,
+                });
+            });
+        }
     } catch (error) {
         console.log(error);
     }
