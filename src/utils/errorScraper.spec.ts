@@ -17,7 +17,7 @@ describe('returnScraperError', () => {
             config: {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
-                headers: {} as AxiosRequestHeaders, 
+                headers: {} as AxiosRequestHeaders,
             },
         };
         const error: AxiosError = new AxiosError(
@@ -26,7 +26,7 @@ describe('returnScraperError', () => {
             {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
-                headers: {} as AxiosRequestHeaders, 
+                headers: {} as AxiosRequestHeaders,
             },
             null,
             response
@@ -50,7 +50,7 @@ describe('returnScraperError', () => {
             config: {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
-                headers: {} as AxiosRequestHeaders, 
+                headers: {} as AxiosRequestHeaders,
             },
         };
         const error: AxiosError = new AxiosError(
@@ -59,7 +59,7 @@ describe('returnScraperError', () => {
             {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
-                headers: {} as AxiosRequestHeaders, 
+                headers: {} as AxiosRequestHeaders,
             },
             null,
             response
@@ -92,7 +92,7 @@ describe('returnScraperError', () => {
             {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
-                headers: {} as AxiosRequestHeaders, 
+                headers: {} as AxiosRequestHeaders,
             },
             null,
             response
