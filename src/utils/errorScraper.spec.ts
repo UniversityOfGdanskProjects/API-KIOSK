@@ -1,6 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { returnScraperError } from './errorScraper';
 import { ErrorType } from '../Types/error.type';
+import { AxiosRequestHeaders } from 'axios';
 
 describe('returnScraperError', () => {
     it('return error 404', () => {
@@ -16,6 +17,7 @@ describe('returnScraperError', () => {
             config: {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
+                headers: {} as AxiosRequestHeaders, 
             },
         };
         const error: AxiosError = new AxiosError(
@@ -24,6 +26,7 @@ describe('returnScraperError', () => {
             {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
+                headers: {} as AxiosRequestHeaders, 
             },
             null,
             response
@@ -47,6 +50,7 @@ describe('returnScraperError', () => {
             config: {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
+                headers: {} as AxiosRequestHeaders, 
             },
         };
         const error: AxiosError = new AxiosError(
@@ -55,6 +59,7 @@ describe('returnScraperError', () => {
             {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
+                headers: {} as AxiosRequestHeaders, 
             },
             null,
             response
@@ -78,6 +83,7 @@ describe('returnScraperError', () => {
             config: {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
+                headers: {} as AxiosRequestHeaders,
             },
         };
         const error: AxiosError = new AxiosError(
@@ -86,6 +92,7 @@ describe('returnScraperError', () => {
             {
                 method: 'get',
                 url: 'https://example.com/api/resource/123',
+                headers: {} as AxiosRequestHeaders, 
             },
             null,
             response
