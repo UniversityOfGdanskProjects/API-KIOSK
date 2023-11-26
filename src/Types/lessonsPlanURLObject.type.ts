@@ -1,6 +1,6 @@
 export interface LessonsPlanURLObject {
-    name: string;
-    main: string;
-    faculty?: string;
-    seminar?: string;
+    majorName: string;
+    mainURL: string;
+    facultyURL?: string;
+    seminarURL?: string;
 }

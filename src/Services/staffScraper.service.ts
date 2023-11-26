@@ -2,6 +2,7 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import { AcademicContent, Academic } from '../Types/staff.type';
 import { ErrorType } from '../Types/error.type';
+import { returnScraperError } from '../utils/errorScraper';
 
 const facultyMemberScraper = async (
     url: string
@@ -85,22 +86,6 @@ export const staffScraper = async (): Promise<Academic[] | ErrorType> => {
         );
         return staff;
     } catch (error) {
-        // @ts-ignore
-        if (error?.response?.status === 404) {
-            return {
-                // @ts-ignore
-                status: error.response.status,
-                message: 'Sorry! Could not find faculty members',
-            };
-        }
-        // @ts-ignore
-        if (error?.response?.status) {
-            return {
-                // @ts-ignore
-                status: error.response.status,
-                message: 'Something went wrong',
-            };
-        }
-        return { status: 500, message: 'Something went wrong' };
+        return returnScraperError(error);
     }
 };
