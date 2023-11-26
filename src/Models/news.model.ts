@@ -28,12 +28,10 @@ const NewsSchema = new mongoose.Schema<News>({
         type: String,
         required: false,
     },
-    body: [
-        {
-            type: String,
-            required: false,
-        },
-    ],
+    body: {
+        type: String,
+        required: false,
+    },
     source: {
         type: String,
         enum: NewsSource,

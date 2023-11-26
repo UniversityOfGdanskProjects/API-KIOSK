@@ -3,18 +3,23 @@ import cheerio from 'cheerio';
 import { News, NewsSource } from '../Types/News.type';
 import { reformatDate } from '../utils/newsScraper/fixDate';
 import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
-import { splitByLines } from '../utils/newsScraper/splitByLines';
 import { mapNewsCategory } from '../utils/newsScraper/returnCategoryEnum';
 import { ErrorType } from 'Types/error.type';
 import { convertStringToDate } from '../utils/newsScraper/convertStringToDate';
 import { removeNewLines } from '../utils/newsScraper/removeNewLines';
+import { removeHTMLAttributes } from '../utils/removeHTMLAttributes';
 
-const getBody = async (link: string, element: string): Promise<string> => {
+const getBody = async (
+    link: string,
+    element: string
+): Promise<string | null> => {
     const HTMLDataRequest = await axios.get(link);
     const HTMLData = HTMLDataRequest.data;
 
     const $ = cheerio.load(HTMLData);
-    return $(element).text();
+    const htmlContent = $(element).html();
+    const noAttributes = removeHTMLAttributes(htmlContent);
+    return noAttributes;
 };
 
 const getPhotos = async (
@@ -94,7 +99,7 @@ const getNewsInCategoriessMFI = async (
                     datetime: convertStringToDate(datetime),
                     title: title,
                     shortBody: removeNewLines(shortDescription),
-                    body: splitByLines(longBody),
+                    body: longBody ? longBody : '',
                     source: NewsSource.MFI,
                     category: mapNewsCategory($('h1.title').text()),
                 };
@@ -160,7 +165,7 @@ const getNewsInCategoriesINF = async (
                     datetime: convertStringToDate(reformatDate(datetime)),
                     title: title,
                     shortBody: removeNewLines(body),
-                    body: splitByLines(longBody),
+                    body: longBody ? longBody : '',
                     source: NewsSource.INF,
                     category: mapNewsCategory($('div.artHeader').text()),
                 };
