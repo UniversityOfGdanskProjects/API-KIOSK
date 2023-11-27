@@ -18,6 +18,7 @@ export const updateNews = async () => {
                 });
             });
         }
+
         if (newsMFI && newsMFI.length > 0) {
             newsMFI.forEach(async (news) => {
                 await NewsModel.findOneAndUpdate({ title: news.title }, news, {
