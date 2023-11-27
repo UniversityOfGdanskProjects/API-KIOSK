@@ -1,4 +1,4 @@
-import { NewsCategory } from '../../Types/News.type';
+import { NewsCategory } from '../../../Types/News.type';
 export const mapNewsCategory = (category: string): NewsCategory => {
     switch (category) {
         case 'Wydarzenia':

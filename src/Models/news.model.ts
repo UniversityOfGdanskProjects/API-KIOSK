@@ -23,6 +23,7 @@ const NewsSchema = new mongoose.Schema<News>({
     title: {
         type: String,
         required: true,
+        unique: true,
     },
     shortBody: {
         type: String,

@@ -1,13 +1,14 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import { News, NewsSource } from '../Types/News.type';
-import { reformatDate } from '../utils/newsScraper/fixDate';
-import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
-import { mapNewsCategory } from '../utils/newsScraper/returnCategoryEnum';
+import { reformatDate } from '../utils/scrappers/newsScraper/fixDate';
+import { removeSeeMore } from '../utils/scrappers/newsScraper/removeSeeMore';
+import { mapNewsCategory } from '../utils/scrappers/newsScraper/returnCategoryEnum';
 import { ErrorType } from 'Types/error.type';
-import { convertStringToDate } from '../utils/newsScraper/convertStringToDate';
-import { removeNewLines } from '../utils/newsScraper/removeNewLines';
+import { convertStringToDate } from '../utils/scrappers/newsScraper/convertStringToDate';
+import { removeNewLines } from '../utils/scrappers/newsScraper/removeNewLines';
 import { removeHTMLAttributes } from '../utils/removeHTMLAttributes';
+import _ from 'lodash';
 
 const getBody = async (
     link: string,
@@ -97,7 +98,7 @@ const getNewsInCategoriessMFI = async (
                     photos: manyPhotos,
                     link: 'https://mfi.ug.edu.pl' + href,
                     datetime: convertStringToDate(datetime),
-                    title: title,
+                    title: _.trimEnd(title),
                     shortBody: removeNewLines(shortDescription),
                     body: longBody ? longBody : '',
                     source: NewsSource.MFI,
@@ -163,7 +164,7 @@ const getNewsInCategoriesINF = async (
                     photos: [],
                     link: 'https://inf.ug.edu.pl/' + href,
                     datetime: convertStringToDate(reformatDate(datetime)),
-                    title: title,
+                    title: _.trimEnd(title),
                     shortBody: removeNewLines(body),
                     body: longBody ? longBody : '',
                     source: NewsSource.INF,
