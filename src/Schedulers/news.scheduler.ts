@@ -1,29 +1,37 @@
-import { NewsModel } from '../Models/news.model';
 import {
     newsScraperINF,
     newsScraperMFI,
 } from '../Services/newsScraper.service';
+import _ from 'lodash';
+import { createUpdateFunction } from '../utils/updatingData';
+import { NewsModel } from '../Models/news.model';
 
 export const updateNews = async () => {
     try {
         const newsINF = await newsScraperINF();
         const newsMFI = await newsScraperMFI();
 
-        await NewsModel.deleteMany({});
-        if (newsINF && newsINF.length > 0) {
-            newsINF.forEach(async (news) => {
-                await NewsModel.findOneAndUpdate({ title: news.title }, news, {
-                    upsert: true,
-                    new: true,
-                });
+        const uniqueNewsINF = _.uniqBy(newsINF, 'title');
+        const uniqueNewsMFI = _.uniqBy(newsMFI, 'title');
+        const updateOrCreateNews = createUpdateFunction(NewsModel);
+        const compareValues = ['shortBody', 'body', 'photos', 'category'];
+
+        if (uniqueNewsINF && uniqueNewsINF.length > 0) {
+            uniqueNewsINF.forEach(async (news) => {
+                await updateOrCreateNews(
+                    { title: news.title },
+                    news,
+                    compareValues
+                );
             });
         }
-        if (newsMFI && newsMFI.length > 0) {
-            newsMFI.forEach(async (news) => {
-                await NewsModel.findOneAndUpdate({ title: news.title }, news, {
-                    upsert: true,
-                    new: true,
-                });
+        if (uniqueNewsMFI && uniqueNewsMFI.length > 0) {
+            uniqueNewsMFI.forEach(async (news) => {
+                await updateOrCreateNews(
+                    { title: news.title },
+                    news,
+                    compareValues
+                );
             });
         }
     } catch (error) {

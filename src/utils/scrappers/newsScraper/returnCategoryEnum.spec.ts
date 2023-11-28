@@ -1,5 +1,5 @@
 import { mapNewsCategory } from './returnCategoryEnum';
-import { NewsCategory } from '../../Types/News.type';
+import { NewsCategory } from '../../../Types/News.type';
 
 describe('returnCategoryEnum', () => {
     it('returns NEWS', () => {
