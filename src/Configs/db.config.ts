@@ -8,11 +8,14 @@ export const connectToDB = async (): Promise<void> => {
 
     const mongoUri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_PATH}`;
 
+    console.log(mongoUri);
+
     const dbName = process.env.DB_NAME;
 
     try {
         await mongoose.connect(`${mongoUri}/${dbName}?retryWrites=true`);
         console.log(`Connected with MongoDB ${dbName} database`);
+        console.log(dbName);
     } catch (error) {
         console.log(error);
     }
