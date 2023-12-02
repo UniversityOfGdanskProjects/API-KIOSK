@@ -51,16 +51,19 @@ export const scrappedEctsSubjects = async (
 
                     return {
                         subject,
-                        lecture,
-                        recitation,
-                        labs,
+                        lecture: Number(lecture),
+                        recitation: Number(recitation),
+                        labs: Number(labs),
                         pass,
-                        ects,
+                        ects: Number(ects),
                         major: major.name,
                         degree: major.degree,
                         term: temporaryTerm,
                         year: temporaryYear,
                         recruitmentYear: major.recruitmentYear,
+                        ...(major.speciality && {
+                            speciality: major.speciality,
+                        }),
                     };
                 })
                 .get()

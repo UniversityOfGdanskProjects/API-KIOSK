@@ -3,12 +3,15 @@ import { getAllSubjectsDegreeURLs } from './utils/getAllSubjectsURLs.service';
 import { scrappedEctsSubjects } from './utils/scrappedEctsSubjects.service';
 import { returnScraperError } from '../../utils/errorScraper';
 import { scrappedEctsSubjectsType } from '../../Types/EctsScrapper/scrappedEctsSubjectsType';
-import { omit, map, groupBy } from 'lodash';
-import { ectsSubject } from 'Types/EctsScrapper/ectsSubject';
+import { omit, map, groupBy, forOwn, isEmpty, mapValues } from 'lodash';
+import { EctsSubjectType } from 'Types/EctsScrapper/ectsSubject';
 import { ErrorType } from 'Types/error.type';
 import isTheWorstCase from '../../utils/scrappers/ectsScrapper/isTheWorstCase';
+import { badSubjects } from '../../utils/scrappers/ectsScrapper/EctsScrappersURLs.const';
 
-export const ectsScrapper = async (): Promise<ectsSubject[] | ErrorType> => {
+export const ectsScrapper = async (): Promise<
+    EctsSubjectType[] | ErrorType
+> => {
     {
         try {
             const allDegreeURLs = await getAllDegreeURLs();
@@ -21,23 +24,24 @@ export const ectsScrapper = async (): Promise<ectsSubject[] | ErrorType> => {
                 allSubjectsURLs as scrappedEctsSubjectsType[][]
             )
                 .flat()
-                .filter((el) => isNaN(el.recruitmentYear))
-                .map((el) => ({ url: el.url, degree: el.degree }));
+                .filter((el) => isNaN(el.recruitmentYear));
 
             const getSpecialCases = (
                 await getAllSubjectsDegreeURLs(specialCases, true)
-            ).flat();
+            ).flat() as scrappedEctsSubjectsType[];
 
-            const ogolna = getSpecialCases
-                .filter((el) => isTheWorstCase(el.name))
-                .map((el) => ({ url: el.url, degree: el.degree }));
+            const ogolna = getSpecialCases.filter(
+                (el) => el.speciality && isTheWorstCase(el.speciality)
+            );
 
             const theWorstCase = await getAllSubjectsDegreeURLs(ogolna, true);
 
             const withSpecialCases = allSubjectsURLs
                 .concat(getSpecialCases, theWorstCase)
                 .flat()
-                .filter((el) => el.recruitmentYear < 2023);
+                .filter(
+                    (el) => el.recruitmentYear < 2023
+                ) as scrappedEctsSubjectsType[];
 
             const ectsSubjects = await scrappedEctsSubjects(withSpecialCases);
 
@@ -45,15 +49,20 @@ export const ectsScrapper = async (): Promise<ectsSubject[] | ErrorType> => {
                 JSON.stringify(omit(obj, 'recruitmentYear'))
             );
 
-            const resultArray = map(groupedByRecruitmentYear, (group) => {
-                const recruitmentYearValues = map(group, 'recruitmentYear');
+            const groupedArray = map(groupedByRecruitmentYear, (obj) => {
+                const recruitmentYearValues = map(obj, 'recruitmentYear');
                 return {
-                    ...omit(group[0], 'recruitmentYear'),
+                    ...omit(obj[0], 'recruitmentYear'),
                     recruitmentYear: recruitmentYearValues,
                 };
-            });
+            }).filter(
+                (el) =>
+                    !badSubjects.some((word) =>
+                        el.subject.trim().startsWith(word)
+                    )
+            );
 
-            return resultArray;
+            return groupedArray;
         } catch (error: any) {
             return returnScraperError(error);
         }
