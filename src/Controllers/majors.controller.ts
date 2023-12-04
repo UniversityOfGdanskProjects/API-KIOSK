@@ -1,14 +1,23 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { Major } from '../Types/major.type';
-import { MajorModel } from '../Models/majors.model';
+import { Request, Response } from 'express';
+import { MajorOutput } from '../Types/major.type';
+import {
+    getAllMajorsService,
+    getMajorDetailsService,
+} from '../Services/majors.service';
+import { Degree } from '../Types/degree.type';
+import { Language } from '../Types/language.type';
 
-export const getAllMajors: RequestHandler = async (
-    req: Request,
-    res: Response<Major[] | { message: string }>,
-    next: NextFunction
+export const getAllMajors = async (
+    req: Request<{}, {}, {}, { language: Language; degree?: Degree }>,
+    res: Response<MajorOutput[] | { message: string }>
 ) => {
     try {
-        const majors = await MajorModel.find({});
+        const { language, degree } = req.query;
+
+        const majors = await getAllMajorsService({
+            language,
+            degree,
+        });
 
         return res.json(majors);
     } catch (error) {
@@ -18,15 +27,15 @@ export const getAllMajors: RequestHandler = async (
     }
 };
 
-export const getMajor: RequestHandler = async (
-    req: Request,
-    res: Response<Major | { message: string }>,
-    next: NextFunction
+export const getMajor = async (
+    req: Request<{ id: string }, {}, {}, { language: Language }>,
+    res: Response<MajorOutput | { message: string }>
 ) => {
     try {
         const { id } = req.params;
+        const { language } = req.query;
 
-        const major = await MajorModel.findOne({ _id: id }, { __v: 0 });
+        const major = await getMajorDetailsService(id, language);
 
         if (!major) {
             return res.status(404).json({ message: 'Could not find major' });

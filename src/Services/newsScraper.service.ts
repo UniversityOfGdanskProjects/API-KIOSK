@@ -6,7 +6,7 @@ import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
 import { mapNewsCategory } from '../utils/newsScraper/returnCategoryEnum';
 import { ErrorType } from 'Types/error.type';
 import { convertStringToDate } from '../utils/newsScraper/convertStringToDate';
-import { removeNewLines } from '../utils/newsScraper/removeNewLines';
+import { removeNewLines } from '../utils/removeNewLines';
 import { removeHTMLAttributes } from '../utils/removeHTMLAttributes';
 
 const getBody = async (

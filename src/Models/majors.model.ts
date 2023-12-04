@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
-import { Major } from 'Types/major.type';
+import { Degree } from '../Types/degree.type';
+import { Major } from '../Types/major.type';
 
 const MajorSchema = new mongoose.Schema<Major>({
     name: {
-        type: String,
-        required: true,
-        unique: true,
-        dropDups: true,
+        PL: { type: String, required: true },
+        EN: { type: String },
     },
     url: {
         type: String,
@@ -14,18 +13,15 @@ const MajorSchema = new mongoose.Schema<Major>({
         unique: true,
         dropDups: true,
     },
-    content: [
-        {
-            element: {
-                type: String,
-                required: true,
-            },
-            text: {
-                type: String,
-                required: true,
-            },
-        },
-    ],
+    content: {
+        PL: { type: String, required: true },
+        EN: { type: String },
+    },
+    degree: {
+        type: String,
+        required: true,
+        enum: Degree,
+    },
 });
 
 export const MajorModel = mongoose.model<Major>(
