@@ -16,7 +16,6 @@ schedule.scheduleJob('lessonsPlanUpdate', '0 0 * * *', updateLessons);
 schedule.scheduleJob('staffUpdate', '0 0 * * *', updateStaff);
 schedule.scheduleJob('majorsUpdate', '0 0 * * *', updateMajors);
 schedule.scheduleJob('newsUpdate', '0 0 * * *', updateNews);
-schedule.scheduleJob('ectsUpdate', '0 0 * * *', updateEctsSubject);
 
 const server = app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
