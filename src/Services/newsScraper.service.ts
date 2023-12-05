@@ -18,8 +18,12 @@ const getBody = async (
 
     const $ = cheerio.load(HTMLData);
     const htmlContent = $(element).html();
-    const noAttributes = removeHTMLAttributes(htmlContent);
-    return noAttributes;
+    if (htmlContent !== null) {
+        const cloned$ = cheerio.load(htmlContent, { xmlMode: true });
+        const noAttributes = removeHTMLAttributes(cloned$);
+        return noAttributes;
+    }
+    return null;
 };
 
 const getPhotos = async (
