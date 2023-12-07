@@ -2,7 +2,7 @@ import {
     newsScraperINF,
     newsScraperMFI,
 } from '../Services/newsScraper.service';
-import _ from 'lodash';
+import { uniqBy } from 'lodash';
 import { createUpdateFunction } from '../utils/updatingData';
 import { NewsModel } from '../Models/news.model';
 
@@ -11,8 +11,8 @@ export const updateNews = async () => {
         const newsINF = await newsScraperINF();
         const newsMFI = await newsScraperMFI();
 
-        const uniqueNewsINF = _.uniqBy(newsINF, 'title');
-        const uniqueNewsMFI = _.uniqBy(newsMFI, 'title');
+        const uniqueNewsINF = uniqBy(newsINF, 'title');
+        const uniqueNewsMFI = uniqBy(newsMFI, 'title');
         const updateOrCreateNews = createUpdateFunction(NewsModel);
         const compareValues = ['shortBody', 'body', 'photos', 'category'];
 

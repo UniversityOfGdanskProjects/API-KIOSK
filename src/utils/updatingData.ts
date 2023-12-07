@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { pick, isEqual } from 'lodash';
 import { Model } from 'mongoose';
 
 type CompareValues = string[];
@@ -7,10 +7,10 @@ const isDifferent = <T>(
     ObjectA: T,
     ObjectB: T,
     compareValues: CompareValues
-): boolean => {
-    const cleanObjectA = _.pick(ObjectA, compareValues);
-    const cleanObjectB = _.pick(ObjectB, compareValues);
-    return !_.isEqual(cleanObjectA, cleanObjectB);
+) => {
+    const cleanObjectA = pick(ObjectA, compareValues);
+    const cleanObjectB = pick(ObjectB, compareValues);
+    return !isEqual(cleanObjectA, cleanObjectB);
 };
 
 export const createUpdateFunction =
@@ -33,7 +33,7 @@ export const createUpdateFunction =
                 await Model.findOneAndUpdate(
                     filter,
                     {
-                        $set: _.pick(data, compareValues),
+                        $set: pick(data, compareValues),
                     },
                     { new: true }
                 );
