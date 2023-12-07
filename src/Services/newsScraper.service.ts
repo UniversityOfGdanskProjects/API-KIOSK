@@ -8,7 +8,7 @@ import { ErrorType } from 'Types/error.type';
 import { convertStringToDate } from '../utils/scrappers/newsScraper/convertStringToDate';
 import { removeNewLines } from '../utils/scrappers/newsScraper/removeNewLines';
 import { removeHTMLAttributes } from '../utils/removeHTMLAttributes';
-import _ from 'lodash';
+import { trimEnd } from 'lodash';
 
 const getBody = async (
     link: string,
@@ -102,7 +102,7 @@ const getNewsInCategoriessMFI = async (
                     photos: manyPhotos,
                     link: 'https://mfi.ug.edu.pl' + href,
                     datetime: convertStringToDate(datetime),
-                    title: _.trimEnd(title),
+                    title: trimEnd(title),
                     shortBody: removeNewLines(shortDescription),
                     body: longBody ? longBody : '',
                     source: NewsSource.MFI,
@@ -168,7 +168,7 @@ const getNewsInCategoriesINF = async (
                     photos: [],
                     link: 'https://inf.ug.edu.pl/' + href,
                     datetime: convertStringToDate(reformatDate(datetime)),
-                    title: _.trimEnd(title),
+                    title: trimEnd(title),
                     shortBody: removeNewLines(body),
                     body: longBody ? longBody : '',
                     source: NewsSource.INF,
