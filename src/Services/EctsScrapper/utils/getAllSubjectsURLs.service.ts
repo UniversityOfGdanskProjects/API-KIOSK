@@ -1,11 +1,11 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-import { ectsSubject } from '../../../Types/EctsScrapper/ectsSubject';
-import { scrappedEctsSubjectsType } from '../../../Types/EctsScrapper/scrappedEctsSubjectsType';
 import { MAINECTSURL } from '../../../utils/scrappers/ectsScrapper/EctsScrappersURLs.const';
+import { basicEctsScrap } from '../../../Types/EctsScrapper/basicScrap';
+import { startsWith } from 'lodash';
 
 export const getAllSubjectsDegreeURLs = async (
-    props: Pick<scrappedEctsSubjectsType, 'degree' | 'url'>[],
+    props: basicEctsScrap[],
     isSpecial: boolean
 ) => {
     try {
@@ -27,10 +27,11 @@ export const getAllSubjectsDegreeURLs = async (
                             name.split(' ')[1].slice(0, 4)
                         );
                         return {
-                            name: major,
+                            name: el.speciality || el.name,
                             url: MAINECTSURL + URL,
                             degree: el.degree,
                             recruitmentYear: Number(exclusionYear),
+                            speciality: major,
                         };
                     }
 

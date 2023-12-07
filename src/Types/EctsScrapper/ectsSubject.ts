@@ -1,13 +1,14 @@
-export interface ectsSubject {
+export interface EctsSubjectType {
     subject: string;
-    lecture: string;
-    recitation: string;
-    labs: string;
-    pass: string;
-    ects: string;
-    major: string;
-    degree: string;
+    lecture: number | null;
+    recitation: number | null;
+    labs: number | null;
+    pass: string | null;
+    ects: number | null;
+    major: string | null;
+    degree: string | null;
     term: number;
     year: number;
     recruitmentYear: number[];
+    speciality?: string;
 }
