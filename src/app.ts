@@ -3,6 +3,7 @@ import majorsRouter from './Routes/majors.route';
 import loginRouter from './Routes/login.route';
 import staffRouter from './Routes/staff.route';
 import newsRouter from './Routes/news.route';
+import eventsRouter from './Routes/events.route';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 
@@ -16,6 +17,7 @@ app.use(loginRouter);
 app.use(lessonsPlansRouter);
 app.use(staffRouter);
 app.use(newsRouter);
+app.use(eventsRouter);
 
 app.get('/', (req: Request, res: Response) =>
     res.status(200).send('API-KIOSK')
