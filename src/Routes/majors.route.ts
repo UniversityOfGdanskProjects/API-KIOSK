@@ -4,6 +4,6 @@ import { Router } from 'express';
 const majorsRouter = Router();
 
 majorsRouter.get('/majors', getAllMajors);
-majorsRouter.get('/major/:id', getMajor);
+majorsRouter.get('/majors/:id', getMajor);
 
 export default majorsRouter;
