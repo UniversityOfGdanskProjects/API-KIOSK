@@ -6,7 +6,7 @@ import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
 import { mapNewsCategory } from '../utils/newsScraper/returnCategoryEnum';
 import { ErrorType } from 'Types/error.type';
 import { convertStringToDate } from '../utils/newsScraper/convertStringToDate';
-import { removeNewLines } from '../utils/newsScraper/removeNewLines';
+import { removeNewLines } from '../utils/removeNewLines';
 import { removeHTMLAttributes } from '../utils/removeHTMLAttributes';
 
 const getBody = async (
@@ -18,8 +18,12 @@ const getBody = async (
 
     const $ = cheerio.load(HTMLData);
     const htmlContent = $(element).html();
-    const noAttributes = removeHTMLAttributes(htmlContent);
-    return noAttributes;
+    if (htmlContent !== null) {
+        const cloned$ = cheerio.load(htmlContent, { xmlMode: true });
+        const noAttributes = removeHTMLAttributes(cloned$);
+        return noAttributes;
+    }
+    return null;
 };
 
 const getPhotos = async (

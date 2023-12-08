@@ -3,4 +3,5 @@ export type scrappedEctsSubjectsType = {
     url: string;
     degree: string;
     recruitmentYear: number;
+    speciality?: string;
 };

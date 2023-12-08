@@ -3,3 +3,5 @@ export const DEGREEURL =
     '/studenci/plany-zajec-i-programy-studiow/aktualne-programy-studiow';
 export const WORSTCASESUBCJECT =
     'Informatyka profil ogólnoakademicki studia stacjonarne';
+
+export const badSubjects = ['(*)', 'syl'];
