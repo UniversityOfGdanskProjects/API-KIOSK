@@ -5,6 +5,8 @@ import { updateNews } from './Schedulers/news.scheduler';
 import { connectToDB } from './Configs/db.config';
 import schedule from 'node-schedule';
 import { app } from './app';
+import { updateEctsSubject } from './Schedulers/ectsSubject.scheduler';
+import { ectsScrapper } from './Services/EctsScrapper/ectsScrapper.service';
 
 const PORT = process.env.PORT || 3001;
 
