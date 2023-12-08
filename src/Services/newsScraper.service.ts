@@ -47,7 +47,7 @@ const getPhotos = async (
     return photos.filter((photo) => photo);
 };
 
-export const newsScraperMFI = async (): Promise<News[] | null> => {
+export const newsScraperMFI = async (): Promise<News[]> => {
     const mfiNewsSites = ['aktualnosci', 'aktualnosci/archiwum-aktualnosci'];
     const newsMFIPromises = (await Promise.allSettled(
         mfiNewsSites.map(async (site) => {
@@ -116,7 +116,7 @@ const getNewsInCategoriessMFI = async (
     return newsArray;
 };
 
-export const newsScraperINF = async (): Promise<News[] | null> => {
+export const newsScraperINF = async (): Promise<News[]> => {
     const infNewsSites = ['news', 'studinfo'];
     const newsINFPromises = (await Promise.allSettled(
         infNewsSites.map(async (site) => {

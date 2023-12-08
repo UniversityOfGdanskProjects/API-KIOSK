@@ -5,8 +5,8 @@ import { News } from 'Types/News.type';
 import { enumerateData } from './enumerateData.service';
 
 type allNews = {
-    INF: News[] | null;
-    MFI: News[] | null;
+    INF: News[];
+    MFI: News[];
 };
 
 export const upsertNews = (allNews: allNews) => {
