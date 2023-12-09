@@ -6,8 +6,30 @@ import newsRouter from './Routes/news.route';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import ectsSubjectRouter from './Routes/ectsSubject.route';
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 
 const app = express();
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Kiosk API',
+            version: '1.0.0',
+            description: 'API for Kiosk',
+        },
+        servers: [
+            {
+                url: 'http://localhost:3001',
+            },
+        ],
+    },
+    apis: ['src/Routes/*.ts'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(express.json());
 app.use(cors());
