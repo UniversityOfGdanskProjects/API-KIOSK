@@ -1,13 +1,14 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import { News, NewsSource } from '../Types/News.type';
-import { reformatDate } from '../utils/newsScraper/fixDate';
-import { removeSeeMore } from '../utils/newsScraper/removeSeeMore';
-import { mapNewsCategory } from '../utils/newsScraper/returnCategoryEnum';
+import { reformatDate } from '../utils/scrappers/newsScraper/fixDate';
+import { removeSeeMore } from '../utils/scrappers/newsScraper/removeSeeMore';
+import { mapNewsCategory } from '../utils/scrappers/newsScraper/returnCategoryEnum';
 import { ErrorType } from 'Types/error.type';
-import { convertStringToDate } from '../utils/newsScraper/convertStringToDate';
-import { removeNewLines } from '../utils/removeNewLines';
+import { convertStringToDate } from '../utils/scrappers/newsScraper/convertStringToDate';
+import { removeNewLines } from '../utils/scrappers/newsScraper/removeNewLines';
 import { removeHTMLAttributes } from '../utils/removeHTMLAttributes';
+import { trimEnd } from 'lodash';
 
 const getBody = async (
     link: string,
@@ -46,7 +47,7 @@ const getPhotos = async (
     return photos.filter((photo) => photo);
 };
 
-export const newsScraperMFI = async (): Promise<News[] | null> => {
+export const newsScraperMFI = async (): Promise<News[]> => {
     const mfiNewsSites = ['aktualnosci', 'aktualnosci/archiwum-aktualnosci'];
     const newsMFIPromises = (await Promise.allSettled(
         mfiNewsSites.map(async (site) => {
@@ -101,7 +102,7 @@ const getNewsInCategoriessMFI = async (
                     photos: manyPhotos,
                     link: 'https://mfi.ug.edu.pl' + href,
                     datetime: convertStringToDate(datetime),
-                    title: title,
+                    title: trimEnd(title),
                     shortBody: removeNewLines(shortDescription),
                     body: longBody ? longBody : '',
                     source: NewsSource.MFI,
@@ -115,7 +116,7 @@ const getNewsInCategoriessMFI = async (
     return newsArray;
 };
 
-export const newsScraperINF = async (): Promise<News[] | null> => {
+export const newsScraperINF = async (): Promise<News[]> => {
     const infNewsSites = ['news', 'studinfo'];
     const newsINFPromises = (await Promise.allSettled(
         infNewsSites.map(async (site) => {
@@ -167,7 +168,7 @@ const getNewsInCategoriesINF = async (
                     photos: [],
                     link: 'https://inf.ug.edu.pl/' + href,
                     datetime: convertStringToDate(reformatDate(datetime)),
-                    title: title,
+                    title: trimEnd(title),
                     shortBody: removeNewLines(body),
                     body: longBody ? longBody : '',
                     source: NewsSource.INF,
